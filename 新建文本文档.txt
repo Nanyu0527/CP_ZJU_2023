@@ -1,0 +1,9 @@
+5.18
+token.l
+token中yylval的各种形式需要在parser中实现。
+不支持++等 只支持最基本的几个运算符和位运算符
+不支持大段注释 注释需要每行加		//
+不支持for 只支持while
+支持if else
+5.19
+需要在parsing的union中添加iVal cVal sVal dVal
