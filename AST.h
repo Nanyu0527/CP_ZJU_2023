@@ -281,7 +281,9 @@ public:
 };
 class VarDecNode : public StmNode{
 public:
-    VarDecNode(){}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier ):type(_type),identifier(_identifier){}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, int _size ):type(_type),identifier(_identifier),size(_size){}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, ExpNode* assign ):type(_type),identifier(_identifier),exp(assign){}
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
