@@ -1,103 +1,87 @@
+
 %{
-#include<stdio.h>
-#include <string>
-#include <iostream>
-char SecondChar(char ch);
+#incldue<stdio.h>
+#include"y.tab.h"
+
+
+
+
 %}
+
+NUM  [1-9]+[0-9]*|0
+ALPHA [a-zA-Z_]
+WORD {ALPHA}+[1-9a-zA-Z_]*
+void remove_comments()
+void increase();
+int col;
 %%
-%option yylineno
-/*keywords*/
-"break"         { return BREAK;    }
-"else"          { return ELSE;     }
-"if"            { return IF;       }
-"return"        { return RETURN;   }
-"while"         { return WHILE;    }
-/*operations*/
-"&&"            { return AND; }
-"||"            { return OR; }
-"<="            { return LE; }
-">="            { return GE; }
-"=="            { return EQ; }
-"!="            { return NE; }
-";"             { return SEMICOLON; }
-"{"             { return LBRACE; }
-"}"             { return RBRACE; }
-","             { return COMMA; }
-":"             { return COLON; }
-"="             { return ASSIGN; }
-"("             { return LPARENT; }
-")"             { return RPARENT; }
-"["             { return LBRACKET; }
-"]"             { return RBRACKET; }
-"."             { return DOT; }
-"&"             { return BITAND; }
-"!"             { return NOT; }
-"~"             { return BITNOT; }
-"-"             { return SUB; }
-"+"             { return PLUS; }
-"*"             { return MUL; }
-"/"             { return DIV; }
-"%"             { return MOD; }
-"<"             { return LT; }
-">"             { return GT; }
-"^"             { return BITXOR; }
-"|"             { return BITOR; }
-"?"             { return INTERROGATION; }
-/*comment*/
-\/\/.*\n					{;}
-/*\t \n...*/							
-[\t\v\r\n\f\a\b]			{;}
-/*int double char string identifer*/
-[0-9]+\.[0-9]+				{ 
-								double dtmp;
-								sscanf(yytext, "%lf", &dtmp);
-								yylval.dVal = dtmp;
-								return REAL; 
-							}
-[0-9]+						{
-								int itmp;
-								sscanf(yytext, "%d", &itmp);
-								yylval.iVal = itmp; 
-								return INTEGER; 
-							}
-\'.\'         				{ 
-								yylval.cVal = yytext[1];
-								return CHAR;
-							}
-\'\\.\'   					{
-								yyval.cval = SecondChar(yytext[2]);
-								return CHAR;
-							}					
-\"(\\.|[^"\\])*\"      		{	
-								yylval.sVal = new std::string(yytext, yyleng);
-								return STRING;
-							}
-[a-zA-Z_]([a-zA-Z_0-9])*	{
-								yylval.sVal = new std::string(yytext, yyleng);
-								return IDENTIFER;
-							}								
-.							{printf("UNKNOWN TOKEN : %s ,AT LINENUMBER:%d\n",yytext,linenumber);}
+"if" { yylval.token = IF  return IF;}
+"else" {yylval.token = ELSE return ELSE}
+"while" {yylval.token = WHILE return WHILE;}
+"break" {yylval.token = BREAK return BREAK;}
+"continue" {yylval.token = CONTINUE return CONTINUE;}
+"return" {yylval.token = RETURN return RETURN;}
+
+"//"(.)* {}
+"/*" {remove_comments(); }
+
+{NUM} {yylval.string = new std::string(yytext,yyleng); return NUM;}
+
+[0-9]+\.[0-9]+    { yylval.string = new std::string(yytext,yyleng); return FLOAT; }
+[0-9]+\.[0-9]+e[+-]?[0-9]+   { yylval.string = new std::string(yytext,yyleng); return FLOAT; }
+
+"+" {increase();yylval.token = PLUS;return PLUS;}
+"-" {increase();yylval.token = MINUS;return MINUS;}
+"*" {increase();yylval.token = MUL;return MUL;}
+"/" {increase();yylval.token = DIV;return DIV;}
+"=" {increase();yylval.token = ASSIGN;return ASSIGN;}
+"&&" {increase();yylval.token = AND;return AND;}
+"||" {increase();yylval.token = OR;return OR;}
+"<=" {increase();yylval.token = LEQ;return LEQ;}
+">=" {increase();yylval.token = GEQ;return GEQ;}
+"==" {increase();yylval.token = EQU;return EQU;}
+"!=" {increase();yylval.token = NEQ;return NEQ;}
+";" {increase();yylval.token = ';';return ';';}
+"," {increase();yylval.token = ',';return ',';}
+":" {increase();yylval.token = ':';return ':';}
+"(" {increase();yylval.token = '(';return '(';}
+")" {increase();yylval.token = ')';return ')';}
+"{" {increase();yylval.token = '{';return '{';}
+"}" {increase();yylval.token = '}';return '}';}
+"[" {increase();yylval.token = '[';return '[';}
+"]" {increase();yylval.token = ']';return ']';}
+"." {increase();yylval.token = '.';return '.';}
+"&" {increase();yylval.token = '&';return '&';}
+"!" {increase();yylval.token = '!';return '!';}
+"~" {increase();yylval.token = '~';return '~';}
+"%" {increase();yylval.token = '%';return '%';}
+"<" {increase();yylval.token = LT;return LT;}
+">" {increase();yylval.token = GT;return GT;}
+"^" {increase();yylval.token = '^';return '^';}
+"|" {increase();yylval.token = '|';return '|';}
+"?" {increase();yylval.token = '?';return '?';}
+
+[\t\v\n\f] {increase();}
+. {printf("unknown token : %s\n ",yytext);}
+
 %%
-int yywrap(void)
-{
-    return 1;
+
+void remove_comments(){
+    char c,cp=0;
+    while(std::cin>>c){
+        if(c == '/'&&cp == '*') break;
+        cp = c;
+    }
+    col = 0;
+    if(!(c == '/'&&cp == '*')){
+        std::cout<<"comment error"<<std::endl;
+    }
 }
-char SecondChar(char ch){
-	switch(ch){
-	case 'a': return '\a';
-	case 'b': return '\b';
-	case 'f': return '\f';
-	case 'n': return '\n';
-	case 'r': return '\r';
-	case 't': return '\t';
-	case 'v': return '\v';
-	case '\\': return '\\';
-	case '\'': return '\'';
-	case '\"': return '\"';
-	default:
-		if ('0'<=ch && ch<='9')
-			return (char)(ch-'0');
-		else
-			return ch;
-	}
+void increase(){
+    int count = 0;
+    for(int i=0;yytext[i]!='\0';i++){
+        if(yytext[i] == '\t') col+=4;
+        else if(yytext[i] == '\n') col=0;
+        else col++;
+    }
 }

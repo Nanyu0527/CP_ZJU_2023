@@ -42,32 +42,32 @@ stm{$$ = new BlockNode();}
 
 stm:
 fundec 
-| vardec ';'
-| exp ';'{$$ = new ExpStmNode(*$1);}
-| RETURN ';'{$$ = new ReturnNULLStmNode();}
-| RETURN ex ';'{$$ = new ReturnStmNode();}
-| BREAK ';'{$$ = new BreakStmNode();}
-| IF '('exp')'block {$$ = IfStmNode($3,$5);}
-| IF '(' exp ')'block ELSE block {$$ = new IfElseStmNode($3,$5,$7);}
-| WHILE '(' exp ')' block {$$ = new WhileStmNode($3,$5);};
+| vardec SEMICOLON
+| exp SEMICOLON{$$ = new ExpStmNode(*$1);}
+| RETURN SEMICOLON{$$ = new ReturnNULLStmNode();}
+| RETURN ex SEMICOLON{$$ = new ReturnStmNode();}
+| BREAK SEMICOLON{$$ = new BreakStmNode();}
+| IF LPARENT exp RPARENT block {$$ = IfStmNode($3,$5);}
+| IF LPARENT exp RPARENT block ELSE block {$$ = new IfElseStmNode($3,$5,$7);}
+| WHILE LPARENT exp RPARENT block {$$ = new WhileStmNode($3,$5);};
 
 block:
-'{'stmlist'}'{$$ = $2;}
-| '{' '}'{$$ = new BlockNode();};
+LBRACE stmlist RBRACE{$$ = $2;}
+| LBRACE RBRACE{$$ = new BlockNode();};
 
 vardec:
 indentifier indentifier{$$ = new VarDecNode(*$1,*$2);}
-| indentifier indentifier '=' exp{$$ = new VarDecNode(*$1,*$2,$4);}
-| indentifier indentifier '[' INTEGER ']'{$$ = new VarDecNode(*$1,*$2,$4);};
+| indentifier indentifier ASSIGN exp{$$ = new VarDecNode(*$1,*$2,$4);}
+| indentifier indentifier  LBRACKET  INTEGER  RBRACKET {$$ = new VarDecNode(*$1,*$2,$4);};
 
 fundec:
-indentifier indentifier '(' fun_args ')'block{
+indentifier indentifier LPARENT fun_args RPARENTblock{
     $$ = new FunDecNode(*$1, *$2, *$4, *$6);
 };
 
 fun_args:
  {$$ = new std::vector<VarDecNode*>();}
-| fun_args ',' vardec{$1 -> push_back($$3);}
+| fun_args COMMA vardec{$1 -> push_back($$3);}
 | vardec{
     $$ = new std::vector<VarDecNode*>();
     $$ -> push_back($$1);
@@ -91,7 +91,7 @@ STRING {
 
 
 exp:
-indentifier '=' exp{$$ = new AssignNode(*$1,*$3);}
+indentifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
 
 | exp PLUS exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp MINUS exp {$$ = new BinOpNode($2,*$1,*$3);}
@@ -104,4 +104,8 @@ indentifier '=' exp{$$ = new AssignNode(*$1,*$3);}
 | exp EQ exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp NE exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp LT exp {$$ = new BinOpNode($2,*$1,*$3);}
-| exp GT exp {$$ = new BinOpNode($2,*$1,*$3);};
+| exp GT exp {$$ = new BinOpNode($2,*$1,*$3);}
+| indentifier  LBRACKET  exp  RBRACKET  {$$ = new ArrayEleNode(*$1,*$3);}
+| indentifier  LBRACKET  exp  RBRACKET  ASSIGN exp {$$ = new ArrayAssNode(*$1,*$3,*$6);}
+| INTEGER | CHAR | REAL | STRING
+| LPARENT exp RPARENT{$$ = $2}
