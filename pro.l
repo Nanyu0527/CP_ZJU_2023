@@ -65,7 +65,7 @@ char SecondChar(char ch);
 								return CHAR;
 							}
 \'\\.\'   					{
-								yyval.cVal = SecondChar(yytext[2]);
+								yyval.cval = SecondChar(yytext[2]);
 								return CHAR;
 							}					
 \"(\\.|[^"\\])*\"      		{	
