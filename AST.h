@@ -225,6 +225,12 @@ public:
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
 };
+class ForStmNode : public StmNode{
+public:
+    ForStmNode(){}
+    virtual string genJson();
+    virtual llvm::Value *genCode(CodeGenerator & gen);
+}
 class ReturnNullStmNode : public StmNode{
 public:
     ReturnNullStmNode(){}
