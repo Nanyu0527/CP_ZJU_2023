@@ -8,12 +8,13 @@
     Node *node;
     ExpNode *exp;
     StmNode *stm;
-    IdentifierNode *indentifier;
+    IdentifierNode *identifier;
     BlockNode *block;
     VarDecNode *vardec;
     std::string *str;
-    std::vector<exp*> explist;
-    std::vector<vardec*> vardeclist;
+    std::vector<stm*> *stmlist;
+    std::vector<exp*> *explist;
+    std::vector<vardec*> *vardeclist;
 
 }
 
@@ -26,10 +27,13 @@
 %token<double> REAL
 %token<std::string> STRING IDENTIFER
 
-%type <indentifier*>indentifier
+%type <identifier> identifier
 %type <exp> exp 
-%type <stm> stm
-
+%type <stm> stm vardec fundec
+%type <explist> call_args
+%type <stmlist> stmlist
+%type <vardeclist> fun_args
+%type <block> program stm block
 
 %%
 program:
@@ -56,12 +60,12 @@ LBRACE stmlist RBRACE{$$ = $2;}
 | LBRACE RBRACE{$$ = new BlockNode();};
 
 vardec:
-indentifier indentifier{$$ = new VarDecNode(*$1,*$2);}
-| indentifier indentifier ASSIGN exp{$$ = new VarDecNode(*$1,*$2,$4);}
-| indentifier indentifier  LBRACKET  INTEGER  RBRACKET {$$ = new VarDecNode(*$1,*$2,$4);};
+identifier identifier{$$ = new VarDecNode(*$1,*$2);}
+| identifier identifier ASSIGN exp{$$ = new VarDecNode(*$1,*$2,$4);}
+| identifier identifier  LBRACKET  INTEGER  RBRACKET {$$ = new VarDecNode(*$1,*$2,$4);};
 
 fundec:
-indentifier indentifier LPARENT fun_args RPARENTblock{
+identifier identifier LPARENT fun_args RPARENTblock{
     $$ = new FunDecNode(*$1, *$2, *$4, *$6);
 };
 
@@ -73,7 +77,7 @@ fun_args:
     $$ -> push_back($$1);
 };
 
-indentifier:
+identifier:
 IDENTIFER {$$ = new IdentifierNode($1);};
 
 INTEGER {
@@ -89,10 +93,21 @@ STRING {
     $$ = new StringNode(*$1);
 };
 
+call_args
+    {
+        $$ = new std::vector<ExpressionNode*>();
+    }
+    | expression {
+        $$ = new std::vector<ExpressionNode*>();
+        $$->push_back($1);
+    }
+    | call_args COMMA expression {
+        $1->push_back($3);
+    };
 
 exp:
-indentifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
-
+identifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
+| identifier '(' call_args ')' {$$ = new FunCallNode(*$1,*$3);}
 | exp PLUS exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp MINUS exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp MUL exp {$$ = new BinOpNode($2,*$1,*$3);}
@@ -105,7 +120,10 @@ indentifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
 | exp NE exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp LT exp {$$ = new BinOpNode($2,*$1,*$3);}
 | exp GT exp {$$ = new BinOpNode($2,*$1,*$3);}
-| indentifier  LBRACKET  exp  RBRACKET  {$$ = new ArrayEleNode(*$1,*$3);}
-| indentifier  LBRACKET  exp  RBRACKET  ASSIGN exp {$$ = new ArrayAssNode(*$1,*$3,*$6);}
+| identifier  LBRACKET  exp  RBRACKET  {$$ = new ArrayEleNode(*$1,*$3);}
+| identifier  LBRACKET  exp  RBRACKET  ASSIGN exp {$$ = new ArrayAssNode(*$1,*$3,*$6);}
+| identifier { $$ = $1 ;}
+| '*' identifier {$$ = getAddrNode(*$2);}
+| '*' identifier '[' exp ']' {$$ = getArrayAddrNode(*$2,*$4);}
 | INTEGER | CHAR | REAL | STRING
 | LPARENT exp RPARENT{$$ = $2}

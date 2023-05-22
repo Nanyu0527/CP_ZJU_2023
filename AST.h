@@ -12,10 +12,10 @@ using namespace std;
 enum C_TYPE
 {
     C_INTEGER,
-    C_FLOAT,
+    // C_FLOAT,
     C_DOUBLE,
-    C_CHAR,
-    C_BOOLEAN
+    C_CHAR
+    // C_BOOLEAN
 };
 
 
@@ -33,6 +33,8 @@ public:
     // void backward(CodeGenerator & gen);
     llvm::BasicBlock *block;
 };
+// using StmList =  std::vector <StmNode>;
+// std::vector<ExpNode> ExpList;
 class ExpNode : public Node{
     
 };
@@ -293,6 +295,7 @@ public:
     int size;
 
 };
+// using VarDecList = std::vector<VarDecNode>;
 class FunDecNode : public StmNode{
 public:
     FunDecNode(IdentifierNode *_type, IdentifierNode *_identifier, 
