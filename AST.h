@@ -153,7 +153,7 @@ public:
 
 class ArrayAssNode : public ExpNode{
 public:
-    ArrayAssNode(IdentifierNode* _identifier,ExpNode* _index,ExpNode* _rhs):identifier(_identifier),index(_index),rhs(__rhs){}
+    ArrayAssNode(IdentifierNode* _identifier,ExpNode* _index,ExpNode* _rhs):identifier(_identifier),index(_index),rhs(_rhs){}
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
@@ -265,7 +265,7 @@ public:
     virtual llvm::Value *genCode(CodeGenerator & gen);
     ExpNode *exp;
     BlockNode *block;
-}
+};
 class ReturnNullStmNode : public StmNode{
 public:
     ReturnNullStmNode(){}
