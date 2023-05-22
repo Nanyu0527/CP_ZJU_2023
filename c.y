@@ -22,10 +22,16 @@
 %token COMMA COLON ASSIGN LPARENT RPARENT LBRACKET RBRACKET
 %token DOT BITAND NOT BITNOT PLUS SUB MUL DIV MOD LT GT BITXOR BITOR INTERROGATION
 
-%token<int> INTEGER
-%token<char> CHAR 
-%token<double> REAL
-%token<std::string> STRING IDENTIFER
+// %token<int> INTEGER
+// %token<char> CHAR 
+// %token<double> REAL
+// %token<std::string> STRING IDENTIFER
+%token<iVal> INTEGER
+// %token<sVal> IDENTIFIER 
+%token<dVal> REAL
+%token<cVal> CHAR
+%token<sVal> STRING
+
 
 %type <identifier> identifier
 %type <exp> exp 
