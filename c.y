@@ -18,7 +18,7 @@
 
 }
 
-%token BREAK ELSE IF RETURN WHILE AND OR LE GE EQ NE SEMICOLON LBRACE RBRACE
+%token BREAK ELSE IF RETURN WHILE FOR AND OR LE GE EQ NE SEMICOLON LBRACE RBRACE
 %token COMMA COLON ASSIGN LPARENT RPARENT LBRACKET RBRACKET
 %token DOT BITAND NOT BITNOT PLUS SUB MUL DIV MOD LT GT BITXOR BITOR INTERROGATION
 
@@ -51,9 +51,11 @@ fundec
 | RETURN SEMICOLON{$$ = new ReturnNULLStmNode();}
 | RETURN ex SEMICOLON{$$ = new ReturnStmNode();}
 | BREAK SEMICOLON{$$ = new BreakStmNode();}
-| IF LPARENT exp RPARENT block {$$ = IfStmNode($3,$5);}
-| IF LPARENT exp RPARENT block ELSE block {$$ = new IfElseStmNode($3,$5,$7);}
-| WHILE LPARENT exp RPARENT block {$$ = new WhileStmNode($3,$5);};
+| IF LPARENT exp RPARENT block {$$ = IfStmNode(*$3,*$5);}
+| IF LPARENT exp RPARENT block ELSE block {$$ = new IfElseStmNode(*$3,*$5,*$7);}
+| WHILE LPARENT exp RPARENT block {$$ = new WhileStmNode(*$3,*$5);}
+| FOR LPARENT exp RPARENT block {$$ = new ForStmNode(*$3,*$5);};
+;
 
 block:
 LBRACE stmlist RBRACE{$$ = $2;}
@@ -78,7 +80,7 @@ fun_args:
 };
 
 identifier:
-IDENTIFER {$$ = new IdentifierNode($1);};
+IDENTIFER {$$ = new IdentifierNode(*$1);};
 
 INTEGER {
     $$ = new IntNode(*$1);

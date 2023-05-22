@@ -12,6 +12,7 @@ char SecondChar(char ch);
 "if"            { return IF;       }
 "return"        { return RETURN;   }
 "while"         { return WHILE;    }
+"for"           { return FOR;      }
 /*operations*/
 "&&"            { return AND; }
 "||"            { return OR; }
