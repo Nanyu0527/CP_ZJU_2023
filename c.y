@@ -135,3 +135,5 @@ identifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
 | '*' identifier '[' exp ']' {$$ = getArrayAddrNode(*$2,*$4);}
 | INTEGER | CHAR | REAL | STRING
 | LPARENT exp RPARENT{$$ = $2}
+
+%%
