@@ -134,8 +134,8 @@ identifier ASSIGN exp{$$ = new AssignNode(*$1,*$3);}
 | identifier  LBRACKET  exp  RBRACKET  {$$ = new ArrayEleNode(*$1,*$3);}
 | identifier  LBRACKET  exp  RBRACKET  ASSIGN exp {$$ = new ArrayAssNode(*$1,*$3,*$6);}
 | identifier { $$ = $1 ;}
-| '*' identifier {$$ = getAddrNode(*$2);}
-| '*' identifier '[' exp ']' {$$ = getArrayAddrNode(*$2,*$4);}
+| MUL identifier {$$ = getAddrNode(*$2);}
+| MUL identifier LBRACKET exp RBRACKET {$$ = getArrayAddrNode(*$2,*$4);}
 | constant
 | LPARENT exp RPARENT{$$ = $2}
 
