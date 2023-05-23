@@ -1,19 +1,19 @@
 %{
 #include<stdio.h>
-#include <string>
-#include <iostream>
+#include<string>
+#include<iostream>
 char SecondChar(char ch);
 %}
 %%
 %option yylineno
-/*keywords*/
+
 "break"         { return BREAK;    }
 "else"          { return ELSE;     }
 "if"            { return IF;       }
 "return"        { return RETURN;   }
 "while"         { return WHILE;    }
 "for"           { return FOR;      }
-/*operations*/
+
 "&&"            { return AND; }
 "||"            { return OR; }
 "<="            { return LE; }
@@ -44,11 +44,11 @@ char SecondChar(char ch);
 "^"             { return BITXOR; }
 "|"             { return BITOR; }
 "?"             { return INTERROGATION; }
-/*comment*/
+
 \/\/.*\n					{;}
-/*\t \n...*/							
+						
 [\t\v\r\n\f\a\b]			{;}
-/*int double char string identifer*/
+
 [0-9]+\.[0-9]+				{ 
 								double dtmp;
 								sscanf(yytext, "%lf", &dtmp);
