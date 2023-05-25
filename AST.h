@@ -17,7 +17,7 @@ enum C_TYPE
     C_CHAR
     // C_BOOLEAN
 };
-
+class CodeGenerator{};
 
 class Node {
 public:
@@ -53,7 +53,7 @@ public:
 
 class IdentifierNode : public ExpNode{
 public:
-    Identifier(string *name) : name(name){}
+    IdentifierNode (string *name) : name(name){}
     string getname(){return *name;}
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
