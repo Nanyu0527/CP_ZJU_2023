@@ -76,7 +76,7 @@ char SecondChar(char ch);
 								yylval.sVal = new std::string(yytext, yyleng);
 								return IDENTIFER;
 							}								
-.							{printf("UNKNOWN TOKEN : %s ,AT LINENUMBER:%d\n",yytext,linenumber);}
+.							{printf("UNKNOWN TOKEN : %s ,AT LINENUMBER:%d\n",yytext,yylineno);}
 %%
 int yywrap(void)
 {
