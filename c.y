@@ -63,7 +63,7 @@ fundec
 | IF LPARENT exp RPARENT block ELSE block {$$ = new IfElseStmNode(*$3,*$5,*$7);}
 | WHILE LPARENT exp RPARENT block {$$ = new WhileStmNode(*$3,*$5);}
 | FOR LPARENT exp RPARENT block {$$ = new ForStmNode(*$3,*$5);};
-;
+
 
 block:
 LBRACE stmlist RBRACE{$$ = $2;}
