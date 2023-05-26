@@ -32,14 +32,9 @@ public:
 
 class StmNode : public Node{
 public:
-    // void forward(CodeGenerator & gen);
-    // void backward(CodeGenerator & gen);
     llvm::BasicBlock *block;
 };
-// using StmList =  std::vector <StmNode>;
-// std::vector<ExpNode> ExpList;
 class ExpNode : public Node{
-    
 };
 class Const : public ExpNode{
 public:
@@ -48,9 +43,7 @@ public:
         int i;
         double d;
         float f;
-        bool b;
         char c;
-        // float f;
     };
 };
 
@@ -91,35 +84,6 @@ public:
 
     char value;
 };
-// class BoolNode : public Const{
-// public:
-//     BoolNode(bool value) : value(value){}
-//     virtual C_TYPE getType(){ return C_BOOLEAN;}
-//     virtual Const::Value getValue(){
-//         Const::Value v;
-//         v.b = value;
-//         return v; 
-//     }
-//     virtual string genJson();
-//     virtual llvm::Value *genCode(CodeGenerator & gen);
-
-//     bool value;
-// };
-// class FloatNode : public Const{
-// public:
-//     FloatNode(float value) : value(value){}
-//     virtual C_TYPE getType(){ return C_FLOAT;}
-//     virtual Const::Value getValue(){
-//         Const::Value v;
-//         v.f = value;
-//         return v; 
-//     }
-//     virtual string genJson();
-//     virtual llvm::Value *genCode(CodeGenerator & gen);
-
-// private:
-//     float value;
-// };
 
 class DoubleNode : public Const{
 public:
@@ -132,7 +96,6 @@ public:
     }
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
-
     double value;
 };
 
@@ -286,9 +249,9 @@ public:
 };
 class VarDecNode : public StmNode{
 public:
-    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier ):type(_type),identifier(_identifier){}
-    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, int _size ):type(_type),identifier(_identifier),size(_size){}
-    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, ExpNode* assign ):type(_type),identifier(_identifier),exp(assign){}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier ):type(_type),identifier(_identifier){exp = nullptr;size = 0;}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, int _size ):type(_type),identifier(_identifier),size(_size){exp = nullptr;}
+    VarDecNode(IdentifierNode* _type ,IdentifierNode* _identifier, ExpNode* assign ):type(_type),identifier(_identifier),exp(assign){size = 0;}
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
