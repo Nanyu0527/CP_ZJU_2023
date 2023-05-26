@@ -45,9 +45,10 @@ class symbolTable {
 };
 
 class CodeGenerator{
-    vector<symbolTable *> symbolTable_stack; 
+    
 
 public:
+    vector<symbolTable *> symbolTable_stack; 
     llvm::Module *myModule; 
     llvm::Function *printf,*scanf, *gets;
     llvm::Function* currentFunc;

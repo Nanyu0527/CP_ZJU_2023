@@ -7,6 +7,9 @@
 #include <llvm/IR/Value.h>
 #include "llvm/ADT/STLExtras.h"
 
+extern llvm::LLVMContext globalContext;
+extern llvm::IRBuilder<> Builder;
+
 using namespace std;
 
 enum C_TYPE
@@ -236,7 +239,7 @@ class IfStmNode : public StmNode{
 public:
     IfStmNode(ExpNode* _exp,BlockNode*_block):exp(_exp),block(_block){}
     virtual string genJson();
-    virtual llvm::Value *genCode(CodeGenerator & gen);
+    llvm::Value *genCode(CodeGenerator & gen);
 
     ExpNode *exp;
     BlockNode *block;
