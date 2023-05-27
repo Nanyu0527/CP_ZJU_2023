@@ -1,6 +1,7 @@
 {%	include<AST.h>
 	#include<string>
 	#include<iostream>
+	#include<vector>
 	BlockNode* root; 
 }
 %union {
