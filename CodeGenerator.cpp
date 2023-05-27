@@ -53,6 +53,14 @@ llvm::Function* CodeGenerator::getPrintf(){
     printf_func->setCallingConv(llvm::CallingConv::C);
     return printf_func;
 }
+llvm::Function* CodeGenerator::getGets(){
+    llvm::FunctionType* gets_type = 
+    llvm::FunctionType::get(Builder.getInt32Ty(),true);
+    llvm::Function* gets_func = 
+    llvm::Function::Create(gets_type,llvm::Function::ExternalLinkage,llvm::Twine("gets"),this->myModule);
+    gets_func->setCallingConv(llvm::CallingConv::C);
+    return gets_func;
+}
 vector<llvm::Value *> *getPrintfArgs(CodeGenerator &Context,vector<ExpNode*>args){
     vector<llvm::Value *> *printf_args = new vector<llvm::Value *>;
     for(auto it: args){
@@ -71,6 +79,14 @@ vector<llvm::Value *> *getScanfArgs(CodeGenerator &Context,vector<ExpNode*>args)
         scanf_args->push_back(tmp);
     }
     return scanf_args;
+}
+vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args){
+    vector<llvm::Value *> *gets_args = new vector<llvm::Value *>;
+    for(auto it: args){
+        llvm::Value* tmp = it->genCode(emitContext);
+        gets_args->push_back(tmp);
+    }
+    return gets_args;
 }
 llvm:: Value* CodeGenerator::emitPrintf(CodeGenerator &Context,vector<ExpNode*> args){
     vector<llvm::Value *> *printf_args = getPrintfArgs(Context, args);    
