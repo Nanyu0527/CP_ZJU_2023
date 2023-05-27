@@ -97,7 +97,11 @@ llvm:: Value* CodeGenerator::emitScanf(CodeGenerator &emitContext,vector<ExpNode
     vector<llvm::Value *> *scanf_args = getScanfArgs(emitContext, args);    
     return Builder.CreateCall(emitContext.scanf, *scanf_args, "scanf");
 }
-
+llvm:: Value* CodeGenerator::emitGets(CodeGenerator &emitContext,vector<ExpNode*> args){
+    //vector<llvm::Value *> *scanf_args = getScanfArgsAddr(emitContext, args);    
+    vector<llvm::Value *> *gets_args = getGetsArgs(emitContext, args);    
+    return Builder.CreateCall(emitContext.gets, *gets_args, "gets");
+}
 void CodeGenerator::Run(BlockNode* Root){
     Root->genCode(*this);
     llvm::verifyModule(*this->myModule, &llvm::outs());

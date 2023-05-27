@@ -77,7 +77,7 @@ public:
     llvm::Function* getGets(); 
     llvm:: Value* emitScanf(CodeGenerator &emitContext,vector<ExpNode*> args);
     llvm:: Value* emitPrintf(CodeGenerator &emitContext,vector<ExpNode*> args);
-    llvm:: Value* emitGets(CodeGenerator &emitContext,vector<ExpNode*> args)
+    llvm:: Value* emitGets(CodeGenerator &emitContext,vector<ExpNode*> args);
     vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
     vector<llvm::Value *> *getScanfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
     vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
