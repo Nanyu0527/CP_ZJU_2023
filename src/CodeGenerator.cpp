@@ -4,6 +4,7 @@ CodeGenerator::CodeGenerator(){
     this->myModule = new llvm::Module("main",globalContext);
     this->printf = getPrintf();
     this->scanf = getScanf();
+    this->gets = getGets();
     this->hasReturn = false;
     this->isArgs = false;
 }
@@ -102,8 +103,13 @@ llvm:: Value* CodeGenerator::emitGets(CodeGenerator &emitContext,vector<ExpNode*
     vector<llvm::Value *> *gets_args = getGetsArgs(emitContext, args);    
     return Builder.CreateCall(emitContext.gets, *gets_args, "gets");
 }
-void CodeGenerator::Run(BlockNode* Root){
+void CodeGenerator::Run(StmNode* Root){
     Root->genCode(*this);
     llvm::verifyModule(*this->myModule, &llvm::outs());
     this->myModule->print(llvm::outs(), nullptr);
+}
+void CodeGenerator::PrintIRCode(string FileName) {
+    std::error_code EC;
+	llvm::raw_fd_ostream Out(FileName, EC);
+    myModule->print(Out, NULL);
 }

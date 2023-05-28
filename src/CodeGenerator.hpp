@@ -81,5 +81,6 @@ public:
     vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
     vector<llvm::Value *> *getScanfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
     vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
-    void Run(BlockNode* Root); 
+    void Run(StmNode* Root); 
+    void PrintIRCode(string FileName)
 };
