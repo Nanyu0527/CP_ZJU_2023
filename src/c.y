@@ -57,7 +57,7 @@ fundec
 | RETURN SEMICOLON{$$ = new ReturnNULLStmNode();}
 | RETURN exp SEMICOLON{$$ = new ReturnStmNode($2);}
 | BREAK SEMICOLON{$$ = new BreakStmNode();}
-| IF LPARENT exp RPARENT block {$$ = IfStmNode($3,$5);}
+| IF LPARENT exp RPARENT block {$$ =new IfStmNode($3,$5);}
 | IF LPARENT exp RPARENT block ELSE block {$$ = new IfElseStmNode($3,$5,$7);}
 | WHILE LPARENT exp RPARENT block {$$ = new WhileStmNode($3,$5);}
 | FOR LPARENT exp SEMICOLON exp SEMICOLON exp SEMICOLON RPARENT block {$$ = new ForStmNode($3,$5,$7,$10);};

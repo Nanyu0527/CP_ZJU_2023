@@ -1270,7 +1270,7 @@ yyreduce:
 
   case 11: /* stm: IF LPARENT exp RPARENT block  */
 #line 60 "c.y"
-                               {(yyval.stm) = IfStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
+                               {(yyval.stm) =new IfStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
 #line 1275 "lab_yacc.cpp"
     break;
 
