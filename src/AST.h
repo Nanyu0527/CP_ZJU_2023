@@ -101,11 +101,11 @@ public:
 
 class StringNode : public ExpNode{
 public:
-    StringNode(string *value):value(value){}
+    StringNode(string &value):value(value){}
     virtual string genJson();
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
-    string *value;
+    string value;
 };
 class ArrayEleNode : public ExpNode{
 public:

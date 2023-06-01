@@ -1,12 +1,41 @@
 #include "AST.h"
 #include "CodeGenerator.hpp"
 
-llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
-    cout << "IdentifierNode : " << name << endl;
 
-    llvm::Value* variable = gen.findVariable(name);
+llvm::Type* getLLvmType(string type){ //通过type，返回对应的LLVM的Type
+    if(type == "int"){return llvm::Type::getInt32Ty(globalContext);}
+    else if(type == "float"){return llvm::Type::getFloatTy(globalContext);}
+    else if(type == "char"){return llvm::Type::getInt8Ty(globalContext);}
+    return llvm::Type::getVoidTy(globalContext);
+}
+
+llvm::Type* getPtrLLvmType(string type){ //对于指针形式，返回对应的LLVM的Type
+    if(type == "int"){return llvm::Type::getInt32PtrTy(globalContext);}
+    else if(type == "float"){return llvm::Type::getFloatPtrTy(globalContext);}
+    else if(type == "char"){return llvm::Type::getInt8PtrTy(globalContext);}
+    return llvm::Type::getVoidTy(globalContext);
+}
+
+llvm::Type* getArrayLLvmType(string type,int size){ //对于数组形式，返回对应的LLVM的Type
+    if(type == "int"){ //int数组
+        return llvm::ArrayType::get(llvm::Type::getInt32Ty(globalContext), size);
+    }
+    else if(type == "float"){
+        return llvm::ArrayType::get(llvm::Type::getFloatTy(globalContext), size);
+    }
+    else if(type == "char"){
+        return llvm::ArrayType::get(llvm::Type::getInt8Ty(globalContext), size);
+    }
+    else{return nullptr;}
+}
+
+
+llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
+    cout << "IdentifierNode : " << *name << endl;
+
+    llvm::Value* variable = gen.findVariable(*name);
     if(variable == nullptr){
-        std::cerr << "undeclared variable " << name << endl;
+        std::cerr << "undeclared variable " << *name << endl;
         return nullptr;
     }
     llvm::Type* tp = variable->getType()->getPointerElementType();
@@ -19,7 +48,10 @@ llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
         vector<llvm::Value*> indexList;
         indexList.push_back(Builder.getInt32(0));
         indexList.push_back(Builder.getInt32(0));
-        res = Builder.CreateInBoundsGEP(variable, indexList, "arrayPtr");
+        //Builder.CreateInBoundsGEP(tp,variable,indexList,"arrayPtr");
+        res = Builder.CreateInBoundsGEP(tp,variable, indexList, "arrayPtr");
+        // llvm::ArrayRef<llvm::Value *> indexRef(indexList.data(), indexList.size());
+        // llvm::Value *varPtr = Builder.CreateInBoundsGEP(variable, indexRef, "tmpstring");
     }
     else {
         res = new llvm::LoadInst(tp, variable, "LoadInst", false, Builder.GetInsertBlock());
@@ -29,7 +61,8 @@ llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
 
 llvm::Value *IntNode::genCode(CodeGenerator & gen){
     cout << "IntNode : " << value <<endl;
-    return llvm::ConstantInt::get(globalContext, llvm::APInt(32, value, true));
+    //return llvm::ConstantInt::get(globalContext, llvm::APInt(32, value, true));
+    return llvm::ConstantInt::get(llvm::Type::getInt32Ty(globalContext), value);
 }
 
 llvm::Value *CharNode::genCode(CodeGenerator & gen){
@@ -70,22 +103,21 @@ llvm::Value *DoubleNode::genCode(CodeGenerator & gen){
 }
 
 llvm::Value *StringNode::genCode(CodeGenerator &gen) {
-  std::vector<llvm::Constant*> chars;
-  for (size_t i = 0; i < stringValue.length(); ++i) {
-    chars.push_back(llvm::ConstantInt::get(gen.context, llvm::APInt(8, stringValue[i])));
-  }
-  chars.push_back(llvm::ConstantInt::get(gen.context, llvm::APInt(8, 0)));
+    string str = value.substr(1, value.length() - 2);
+    string after = string(1, '\n');
+    int pos = str.find("\\n");
+    while(pos != string::npos) {
+        str = str.replace(pos, 2, after);
+        pos = str.find("\\n");
+    }
+    llvm::Constant *strConst = llvm::ConstantDataArray::getString(globalContext, str);
+    llvm::Value *globalVar = new llvm::GlobalVariable(*gen.myModule, strConst->getType(), true, llvm::GlobalValue::PrivateLinkage, strConst, "_Const_String_");
 
-  llvm::ArrayType* arrayType = llvm::ArrayType::get(llvm::Type::getInt8Ty(gen.context), chars.size());
-  llvm::GlobalVariable* strVar = new llvm::GlobalVariable(*gen.module, arrayType, true, llvm::GlobalValue::PrivateLinkage, 0, ".str");
-  strVar->setAlignment(1);
-  strVar->setUnnamedAddr(llvm::GlobalValue::UnnamedAddr::Global);
+    llvm::Value *zeroIndex = llvm::ConstantInt::get(llvm::Type::getInt32Ty(globalContext), 0);
+    llvm::Value *indices[] = { zeroIndex, zeroIndex };
 
-  strVar->setInitializer(llvm::ConstantArray::get(arrayType, chars));
-
-  std::vector<llvm::Value*> indices(2, llvm::ConstantInt::get(gen.context, llvm::APInt(32, 0)));
-  llvm::Value* res = llvm::GetElementPtrInst::CreateInBounds(arrayType, strVar, indices, "", gen.currentBlock());
-  return res;
+    llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, indices, "tmpstring");
+    return varPtr;
 }
 
 llvm::Value *ArrayEleNode::genCode(CodeGenerator & gen){
@@ -143,7 +175,7 @@ llvm::Value *ArrayAssNode::genCode(CodeGenerator & gen){
         indexList.push_back(indexValue);    
     }
     llvm::Value* left =  Builder.CreateInBoundsGEP(arrayValue, llvm::ArrayRef<llvm::Value*>(indexList), "tmpvar");
-    llvm::Value *right = rhs.genCode(gen);
+    llvm::Value *right = rhs->genCode(gen);
 
     llvm::outs()<<*(left->getType()->getPointerElementType());
 
@@ -155,29 +187,31 @@ llvm::Value *ArrayAssNode::genCode(CodeGenerator & gen){
 }
 
 llvm::Value *FunCallNode::genCode(CodeGenerator & gen){
-    if(identifier.name == "printf"){ //若调用 printf 函数
-        return emitPrintf(gen, args);
-    } else if(identifier.name == "scanf"){ //若调用 scanf 函数
-        return emitScanf(gen, args);
-    } else if(identifier.name == "gets") { // 若调用 gets 函数
-        return emitGets(gen, args);
+    if(identifier->getname() == "printf"){ //若调用 printf 函数
+        return gen.emitPrintf(gen, args);
+    } else if(identifier->getname() == "scanf"){ //若调用 scanf 函数
+        return gen.emitScanf(gen, args);
+    } else if(identifier->getname() == "gets") { // 若调用 gets 函数
+        return gen.emitGets(gen, args);
     }
 
-    //在module中查找以identifier命名的函数
-    llvm::Function *func = gen.Module->getFunction(identifier.name.c_str());
+    // 在module中查找以identifier命名的函数
+    llvm::Function *func = gen.myModule->getFunction(identifier->name->c_str());
     if (func == NULL) {
-		std::cerr << "no such function " << identifier.name << endl;
-	}
+        std::cerr << "no such function " << *(identifier->name) << endl;
+    }
 
     vector<llvm::Value*> tmp;
-    vector<ExpressionNode*>::iterator i;
+    vector<ExpNode*>::iterator i;
     for(auto i : args){  //对每个ExpressionNode进行emit 并将结果存入tmp中
         tmp.push_back((*i).genCode(gen));
+        if (tmp.back()->getType()->isPointerTy()) {
+            tmp.back() = Builder.CreateLoad(tmp.back()->getType(), tmp.back());
+        }
     }
     //调用
-    llvm::CallInst *call = llvm::CallInst::Create(func,llvm::makeArrayRef(tmp),"",Builder.GetInsertBlock());
-    cout << "Creating method call: " << identifier.name << endl;
-	return call;
+    llvm::CallInst *call = llvm::CallInst::Create(func, llvm::makeArrayRef(tmp), "", Builder.GetInsertBlock());
+    return call;
 
 }
 
@@ -201,22 +235,22 @@ llvm::Value *BinOpNode::genCode(CodeGenerator & gen){
         return Builder.CreateOr(left, right, "tmpOR");
     }
     else if (op == EQU) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpOEQ(left, right, "fcmptmp") : Builder.CreateICmpEQ(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpOEQ(left, right, "fcmptmp") : Builder.CreateICmpEQ(left, right, "icmptmp");
     }
     else if (op == GEQ) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpOGE(left, right, "fcmptmp") : Builder.CreateICmpSGE(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpOGE(left, right, "fcmptmp") : Builder.CreateICmpSGE(left, right, "icmptmp");
     }
     else if (op == LEQ) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpOLE(left, right, "fcmptmp") : Builder.CreateICmpSLE(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpOLE(left, right, "fcmptmp") : Builder.CreateICmpSLE(left, right, "icmptmp");
     }
     else if (op == GREATERT) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpOGT(left, right, "fcmptmp") : Builder.CreateICmpSGT(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpOGT(left, right, "fcmptmp") : Builder.CreateICmpSGT(left, right, "icmptmp");
     }
     else if (op == LESST) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpOLT(left, right, "fcmptmp") : Builder.CreateICmpSLT(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpOLT(left, right, "fcmptmp") : Builder.CreateICmpSLT(left, right, "icmptmp");
     }
     else if (op == NEQ) {
-        return (left->getType() == llvm::Type::getFloatTy(myContext)) ? Builder.CreateFCmpONE(left, right, "fcmptmp") : Builder.CreateICmpNE(left, right, "icmptmp");
+        return (left->getType() == llvm::Type::getFloatTy(globalContext)) ? Builder.CreateFCmpONE(left, right, "fcmptmp") : Builder.CreateICmpNE(left, right, "icmptmp");
     }
     return NULL;
 
@@ -336,9 +370,9 @@ llvm::Value *WhileStmNode::genCode(CodeGenerator & gen){
 
     llvm::Function *TheFunction = gen.currentFunc;
 
-    llvm::BasicBlock *condBB = llvm::BasicBlock::Create(myContext, "cond", TheFunction);
-    llvm::BasicBlock *loopBB = llvm::BasicBlock::Create(myContext, "loop", TheFunction);
-    llvm::BasicBlock *afterBB = llvm::BasicBlock::Create(myContext, "afterLoop", TheFunction);
+    llvm::BasicBlock *condBB = llvm::BasicBlock::Create(globalContext, "cond", TheFunction);
+    llvm::BasicBlock *loopBB = llvm::BasicBlock::Create(globalContext, "loop", TheFunction);
+    llvm::BasicBlock *afterBB = llvm::BasicBlock::Create(globalContext, "afterLoop", TheFunction);
 
     GlobalAfterBB.push(afterBB);
 
@@ -346,7 +380,7 @@ llvm::Value *WhileStmNode::genCode(CodeGenerator & gen){
     Builder.SetInsertPoint(condBB);
 
     llvm::Value *condValue = expression.genCode(gen);
-    condValue = Builder.CreateICmpNE(condValue, llvm::ConstantInt::get(llvm::Type::getInt1Ty(myContext), 0, true), "whileCond");
+    condValue = Builder.CreateICmpNE(condValue, llvm::ConstantInt::get(llvm::Type::getInt1Ty(globalContext), 0, true), "whileCond");
     auto branch = Builder.CreateCondBr(condValue, loopBB, afterBB);
     condBB = Builder.GetInsertBlock();
 
@@ -386,20 +420,22 @@ llvm::Value *ReturnStmNode::genCode(CodeGenerator & gen){
     return Builder.CreateBr(gen.returnBB);
 }
 
+
 llvm::Value* VarDecNode::genCode(CodeGenerator & gen) {  
     if(size == 0){ //非数组
-        llvm::Type* llvmType = getLLvmType(type.name);
+        llvm::Type* llvmType = getLLvmType(*(type->name));
         // 全局变量
         if(gen.currentFunc == nullptr) {
             //cout << "Creating global variable declaration " << type.name << " " << identifier.name<< endl;
             //
             //查找变量防止重新定义
-            llvm::GlobalVariable *tmp = globalContext.myModule->getNamedGlobal(identifier.name);
+            llvm::StringRef Idfname(*(identifier->name));
+            llvm::GlobalVariable *tmp = gen.myModule->getNamedGlobal(Idfname);
             if(tmp != nullptr){
-                throw logic_error("Redefined Global Variable: " + identifier.name);
+                throw logic_error("Redefined Global Variable: " + *(identifier->name));
             }
             //新建全局变量
-            llvm::GlobalVariable* New_globalVar = new llvm::GlobalVariable(*(globalContext.myModule), llvmType, false, llvm::GlobalValue::PrivateLinkage, 0, identifier.name);
+            llvm::GlobalVariable* New_globalVar = new llvm::GlobalVariable(*(gen.myModule), llvmType, false, llvm::GlobalValue::PrivateLinkage, 0, *(identifier->name));
             //类型 ， 非数组单个变量偏移为0
             New_globalVar->setInitializer(llvm::ConstantInt::get(llvmType, 0));
             return nullptr;
@@ -409,33 +445,34 @@ llvm::Value* VarDecNode::genCode(CodeGenerator & gen) {
             auto *block = Builder.GetInsertBlock();
             //
             // 当前域中已经有该变量, 重复定义        
-            if(globalContext.getTop().count(identifier.name) != 0) {
-                throw logic_error("Redefined Local Variable: " + identifier.name);
+            if(gen.getTop().count(*(identifier->name)) != 0) {
+                throw logic_error("Redefined Local Variable: " + *(identifier->name));
             }
             //
             //空间声明
-            llvm::AllocaInst *alloc = new llvm::AllocaInst(llvmType,block->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(),(identifier.name.c_str()), block);
+            llvm::AllocaInst *alloc = new llvm::AllocaInst(llvmType,block->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(),(identifier->name->c_str()), block);
             // 将新定义的变量类型和地址存入符号表中
-            globalContext.getTopType()[identifier.name] = llvmType;
-            globalContext.getTop()[identifier.name] = alloc;
+            gen.getTopType()[*(identifier->name)] = llvmType;
+            gen.getTop()[*(identifier->name)] = alloc;
             //是否赋值
             if (exp != NULL) {
-                AssignNode assign(identifier, *exp);
-                assign.genCode(globalContext);
+                AssignNode assign(identifier, exp);
+                assign.genCode(gen);
             }
             return alloc;
         }
     }
     else{ //数组
-        llvm::Type* llvmType = getArrayLLvmType(type.name, size); 
-        if(globalContext.currentFunc == nullptr) { //当前函数为空，为全局数组定义
+        llvm::Type* llvmType = getArrayLLvmType(*(type->name), size); 
+        if(gen.currentFunc == nullptr) { //当前函数为空，为全局数组定义
             //cout << "Creating global array declaration " << type.name << " " << identifier.name<< endl;
             //查找变量防止重新定义
-            llvm::GlobalVariable *tmp = globalContext.myModule->getNamedGlobal(identifier.name);
+            llvm::StringRef Idfname(*(identifier->name));
+            llvm::GlobalVariable *tmp = gen.myModule->getNamedGlobal(Idfname);
             if(tmp != nullptr){
-                throw logic_error("Redefined Global Variable(ARRAY): " + identifier.name);
+                throw logic_error("Redefined Global Variable(ARRAY): " + *(identifier->name));
             }
-            llvm::GlobalVariable* New_globalVar = new llvm::GlobalVariable(*(globalContext.myModule), llvmType, false, llvm::GlobalValue::PrivateLinkage, 0, identifier.name);
+            llvm::GlobalVariable* New_globalVar = new llvm::GlobalVariable(*(gen.myModule), llvmType, false, llvm::GlobalValue::PrivateLinkage, 0, *(identifier->name));
             //???????
             std::vector<llvm::Constant*> constArrayElem;
             llvm::Constant* constElem = llvm::ConstantInt::get(llvmType->getArrayElementType(), 0);
@@ -448,44 +485,44 @@ llvm::Value* VarDecNode::genCode(CodeGenerator & gen) {
             
         }
         else {//非空 为内部变量
-            if(globalContext.getTop().count(identifier.name) != 0) {
+            if(gen.getTop().count(*(identifier->name)) != 0) {
                 // 当前域中有该变量, 重复定义
-                throw logic_error("Redefined Local Variable: " + identifier.name);
+                throw logic_error("Redefined Local Variable: " + *(identifier->name));
             }
 
-            if(globalContext.isArgs) {
+            if(gen.isArgs) {
                 // 如果是函数参数中定义的数组需要返回 指针类型
                 //cout << "Creating args array declaration " << type.name << " " << identifier.name<< endl;
-                llvmType = getPtrLLvmType(type.name);
+                llvmType = getPtrLLvmType(*(type->name));
             } else {
                 //cout << "Creating local array declaration " << type.name << " " << identifier.name<< endl;
             }
-            globalContext.getTopType()[identifier.name] = llvmType;
+            gen.getTopType()[*(identifier->name)] = llvmType;
             auto *block = Builder.GetInsertBlock();
-            llvm::AllocaInst *alloc = new llvm::AllocaInst(llvmType,block->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(),(identifier.name.c_str()), block);
-            globalContext.getTop()[identifier.name] = alloc;
+            llvm::AllocaInst *alloc = new llvm::AllocaInst(llvmType,block->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(),(identifier->name->c_str()), block);
+            gen.getTop()[*(identifier->name)] = alloc;
             return alloc;
         }
     }
 
 }
 llvm::Value* FunDecNode::genCode(CodeGenerator & gen){
-	vector<llvm::type> args_types;
+	vector<llvm::Type*> args_types;
     for(auto it : args){
         if(it->size == 0)//除数组外其它size赋值为0
-            args_types.push_back(getLLvmType(it->type.name));
+            args_types.push_back(getLLvmType(*(it->type->name)));
         else//array 
         {
-            args_types.push_back(getPtrLLvmType(it->type.name));
+            args_types.push_back(getPtrLLvmType(*(it->type->name)));
         }
     }
     //FunctionType::get调用用于为给定的函数原型创建对应的FunctionType对象。
     //随后，FunctionType::get方法以args_types为参数类型、以单个type为返回值类型，
     //创建出一个参数个数不可变（最后一个参数false就是这个意思）的函数类型。
-    llvm::FunctionType *Ftype = llvm::FunctionType::get(getLLvmType(type.name), makeArrayRef(args_types), false);
+    llvm::FunctionType *Ftype = llvm::FunctionType::get(getLLvmType(*(type->name)), makeArrayRef(args_types), false);
     //
     // “ExternalLinkage”表示该函数可能定义于当前模块之外，且/或可以被当前模块之外的函数调用;name函数名;符号表注册
-    llvm::Function *F = Function::Create(Ftype, llvm::Function::ExternalLinkage, identifier->name.c_str(), gen.module);
+    llvm::Function *F = llvm::Function::Create(Ftype, llvm::Function::ExternalLinkage, identifier->name->c_str(), gen.myModule);
     //
     //新建了一个名为“entry”的基本块对象，稍后该对象将被插入F
     llvm::BasicBlock *basicblock = llvm::BasicBlock::Create(globalContext, "entry", F);
@@ -497,42 +534,42 @@ llvm::Value* FunDecNode::genCode(CodeGenerator & gen){
     
     
     //函数有返回值s
-    if(type.name.compare("void") != 0) {
+    if(type->name->compare("void") != 0) {
         //返回值空间分配
-        globalContext.returnVal = new llvm::AllocaInst(getLLvmType(type.name), baiscblock->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(), "", basicblock);
+        gen.returnVal = new llvm::AllocaInst(getLLvmType(*(type->name)), basicblock->getParent()->getParent()->getDataLayout().getAllocaAddrSpace(), "", basicblock);
     }
     //压入新符号表
-	globalContext.pushBlock();
+	gen.pushBlock();
 	llvm::Function::arg_iterator args_Values = F->arg_begin();
     llvm::Value* Tmp_Value;
     //遍历参数
-    globalContext.isArgs = true;// (*it).genCode(globalContext);用
+    gen.isArgs = true;// (*it).genCode(globalContext);用
     for(auto it : args){
-        (*it).genCode(globalContext);
+        (*it).genCode(gen);
         //??     Tmp_Value = &*args_Values++;
         Tmp_Value = args_Values;
         args_Values++;
-        Tmp_Value->setName((it)->identifier.name.c_str());
+        Tmp_Value->setName((*it).identifier->name->c_str());
         //StoreInst (Value *Val, Value *Ptr, bool isVolatile, BasicBlock *InsertAtEnd)
         //          要插的值    ，目标存储指针，是否易变    ，插在哪块后面。
-        llvm::StoreInst *inst = new llvm::StoreInst(Tmp_Value, globalContext.getTop()[(it)->identifier.name], false, basicblock);
+        llvm::StoreInst *inst = new llvm::StoreInst(Tmp_Value, gen.getTop()[*((*it).identifier->name)], false, basicblock);
 	}
-    globalContext.isArgs = false;
+    gen.isArgs = false;
 	//函数后函数块处理
-	block.genCode(globalContext);
+	block->genCode(gen);
     //重置hasreturn
-    globalContext.hasReturn = false;
+    gen.hasReturn = false;
     //return后操作
-    Builder.SetInsertPoint(globalContext.returnBB);
-    if(type.name.compare("void") == 0) {
+    Builder.SetInsertPoint(gen.returnBB);
+    if((type->name)->compare("void") == 0) {
         Builder.CreateRetVoid();
     } else {
-        llvm::Value* ret = Builder.CreateLoad(getLLvmType(type.name), globalContext.returnVal, "");
+        llvm::Value* ret = Builder.CreateLoad(getLLvmType(*(type->name)), gen.returnVal, "");
         Builder.CreateRet(ret);
     }
 
-	globalContext.popBlock();
-    globalContext.currentFunc = nullptr;
+	gen.popBlock();
+    gen.currentFunc = nullptr;
 	//std::cout << "Creating function: " << identifier.name << endl;
 	return F;
 }
