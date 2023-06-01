@@ -549,20 +549,18 @@ llvm::Value *FunDecNode::genCode(CodeGenerator & gen){
 	return function;
 }
 
-llvm:: Value* emitPrintf(EmitContext &emitContext,vector<ExpressionNode*> args){
-    vector<llvm::Value *> *printf_args = getPrintfArgs(emitContext, args);    
-    return myBuilder.CreateCall(emitContext.printf, *printf_args, "printf");
+llvm:: Value* emitPrintf(CodeGenerator & gen,vector<ExpNode*> args){
+    vector<llvm::Value *> *printf_args = getPrintfArgs(gen, args);
+    return Builder.CreateCall(gen.printf, *printf_args, "printf");
 }
 
-llvm:: Value* emitScanf(EmitContext &emitContext,vector<ExpressionNode*> args){
-    //vector<llvm::Value *> *scanf_args = getScanfArgsAddr(emitContext, args);    
-    vector<llvm::Value *> *scanf_args = getScanfArgs(emitContext, args);    
-    return myBuilder.CreateCall(emitContext.scanf, *scanf_args, "scanf");
+llvm:: Value* emitScanf(CodeGenerator & gen,vector<ExpNode*> args){
+    vector<llvm::Value *> *scanf_args = getScanfArgs(gen, args);
+    return Builder.CreateCall(gen.scanf, *scanf_args, "scanf");
 }
 
-llvm:: Value* emitGets(EmitContext &emitContext,vector<ExpressionNode*> args){
-    //vector<llvm::Value *> *scanf_args = getScanfArgsAddr(emitContext, args);    
-    vector<llvm::Value *> *gets_args = getGetsArgs(emitContext, args);    
-    return myBuilder.CreateCall(emitContext.gets, *gets_args, "gets");
+llvm:: Value* emitGets(CodeGenerator & gen,vector<ExpNode*> args){
+    vector<llvm::Value *> *gets_args = getGetsArgs(gen, args);
+    return Builder.CreateCall(gen.gets, *gets_args, "gets");
 }
 
