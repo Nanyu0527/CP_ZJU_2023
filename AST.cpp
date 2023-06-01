@@ -101,22 +101,21 @@ llvm::Value *DoubleNode::genCode(CodeGenerator & gen){
 }
 
 llvm::Value *StringNode::genCode(CodeGenerator &gen) {
-  std::vector<llvm::Constant*> chars;
-  for (size_t i = 0; i < stringValue.length(); ++i) {
-    chars.push_back(llvm::ConstantInt::get(gen.context, llvm::APInt(8, stringValue[i])));
-  }
-  chars.push_back(llvm::ConstantInt::get(gen.context, llvm::APInt(8, 0)));
+    string str = value.substr(1, value.length() - 2);
+    string after = string(1, '\n');
+    int pos = str.find("\\n");
+    while(pos != string::npos) {
+        str = str.replace(pos, 2, after);
+        pos = str.find("\\n");
+    }
+    llvm::Constant *strConst = llvm::ConstantDataArray::getString(globalContext, str);
+    llvm::Value *globalVar = new llvm::GlobalVariable(*gen.myModule, strConst->getType(), true, llvm::GlobalValue::PrivateLinkage, strConst, "_Const_String_");
 
-  llvm::ArrayType* arrayType = llvm::ArrayType::get(llvm::Type::getInt8Ty(gen.context), chars.size());
-  llvm::GlobalVariable* strVar = new llvm::GlobalVariable(*gen.module, arrayType, true, llvm::GlobalValue::PrivateLinkage, 0, ".str");
-  strVar->setAlignment(1);
-  strVar->setUnnamedAddr(llvm::GlobalValue::UnnamedAddr::Global);
+    llvm::Value *zeroIndex = llvm::ConstantInt::get(llvm::Type::getInt32Ty(globalContext), 0);
+    llvm::Value *indices[] = { zeroIndex, zeroIndex };
 
-  strVar->setInitializer(llvm::ConstantArray::get(arrayType, chars));
-
-  std::vector<llvm::Value*> indices(2, llvm::ConstantInt::get(gen.context, llvm::APInt(32, 0)));
-  llvm::Value* res = llvm::GetElementPtrInst::CreateInBounds(arrayType, strVar, indices, "", gen.currentBlock());
-  return res;
+    llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, indices, "tmpstring");
+    return varPtr;
 }
 
 llvm::Value *ArrayEleNode::genCode(CodeGenerator & gen){
@@ -142,7 +141,7 @@ llvm::Value *ArrayEleNode::genCode(CodeGenerator & gen){
         indexList.push_back(indexValue);    
     }
 
-    llvm::Value* elePtr =  Builder.CreateInBoundsGEP(arrayValue, llvm::ArrayRef<llvm::Value*>(indexList), "tmparray");
+    llvm::Value* elePtr =  Builder.CreateInBoundsGEP(arrayValue->getType(),arrayValue, llvm::ArrayRef<llvm::Value*>(indexList), "tmparray");
     return Builder.CreateLoad(elePtr->getType()->getPointerElementType(), elePtr, "tmpvar");
     
 }
