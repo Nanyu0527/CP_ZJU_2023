@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_LAB_YACC_HPP_INCLUDED
+# define YY_YY_LAB_YACC_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -98,52 +98,6 @@ extern int yydebug;
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
-/* Token kinds.  */
-#define YYEMPTY -2
-#define YYEOF 0
-#define YYerror 256
-#define YYUNDEF 257
-#define BREAK 258
-#define ELSE 259
-#define IF 260
-#define RETURN 261
-#define WHILE 262
-#define FOR 263
-#define AND 264
-#define OR 265
-#define LE 266
-#define GE 267
-#define EQ 268
-#define NE 269
-#define SEMICOLON 270
-#define LBRACE 271
-#define RBRACE 272
-#define COMMA 273
-#define COLON 274
-#define ASSIGN 275
-#define LPARENT 276
-#define RPARENT 277
-#define LBRACKET 278
-#define RBRACKET 279
-#define DOT 280
-#define BITAND 281
-#define NOT 282
-#define BITNOT 283
-#define PLUS 284
-#define MINUS 285
-#define MUL 286
-#define DIV 287
-#define MOD 288
-#define LT 289
-#define GT 290
-#define BITXOR 291
-#define BITOR 292
-#define INTERROGATION 293
-#define INTEGER 294
-#define IDENTIFIER 295
-#define REAL 296
-#define CHAR 297
-#define STRING 298
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -151,6 +105,10 @@ union YYSTYPE
 {
 #line 7 "c.y"
 
+    int iVal;
+    std::string *sVal;
+    double dVal;
+    char cVal;
     Node *node;
     ExpNode *exp;
     StmNode *stm;
@@ -163,7 +121,7 @@ union YYSTYPE
     std::vector<vardec*> *vardeclist;
 
 
-#line 167 "y.tab.h"
+#line 125 "lab_yacc.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -178,4 +136,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_LAB_YACC_HPP_INCLUDED  */

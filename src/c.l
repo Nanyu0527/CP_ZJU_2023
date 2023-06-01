@@ -2,10 +2,13 @@
 #include<stdio.h>
 #include<string>
 #include<iostream>
+#include"AST.h"
+#include"lab_yacc.hpp"
 char SecondChar(char ch);
 %}
+
 %%
-%option yylineno
+
 
 "break"         { return BREAK;    }
 "else"          { return ELSE;     }
