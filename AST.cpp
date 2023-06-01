@@ -31,16 +31,7 @@
 #include <llvm/Support/DynamicLibrary.h>
 #include <llvm/Target/TargetMachine.h>
 using namespace std;
-extern llvm::LLVMContext* gen;
-extern llvm::IRBuilder<>* Builder;
-extern llvm::Module* Module;
-extern std::map<std::string, llvm::Value *> NamedValues;
 
-using namespace std;
-extern llvm::LLVMContext* gen;
-extern llvm::IRBuilder<>* Builder;
-extern llvm::Module* Module;
-extern std::map<std::string, llvm::Value *> NamedValues;
 
 llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
     cout << "IdentifierNode : " << name << endl;
@@ -55,12 +46,11 @@ llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
     cout<<endl;
 
     llvm::Value* res = nullptr;
-    // 如果传入的是一个数组的 ID
     if(tp->isArrayTy()) {
         vector<llvm::Value*> indexList;
         indexList.push_back(Builder.getInt32(0));
         indexList.push_back(Builder.getInt32(0));
-        res = Builder.CreateInBoundsGEP(variable, indexList, "arrayPtr");
+        res = Builder.CreateInBoundsGEP(variable->getType(), variable, indexList, "tmpstring");
     }
     else {
         res = new llvm::LoadInst(tp, variable, "LoadInst", false, Builder.GetInsertBlock());
