@@ -31,7 +31,7 @@
 #include <llvm/Support/DynamicLibrary.h>
 #include <llvm/Target/TargetMachine.h>
 using namespace std;
-
+stack<llvm::BasicBlock *> GlobalAfterBB;
 
 llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
     cout << "IdentifierNode : " << name << endl;
@@ -185,29 +185,31 @@ llvm::Value *ArrayAssNode::genCode(CodeGenerator & gen){
 }
 
 llvm::Value *FunCallNode::genCode(CodeGenerator & gen){
-    if(identifier.name == "printf"){ //若调用 printf 函数
-        return emitPrintf(gen, args);
-    } else if(identifier.name == "scanf"){ //若调用 scanf 函数
-        return emitScanf(gen, args);
-    } else if(identifier.name == "gets") { // 若调用 gets 函数
-        return emitGets(gen, args);
+    if(identifier->getname() == "printf"){ //若调用 printf 函数
+        return gen.emitPrintf(gen, args);
+    } else if(identifier->getname() == "scanf"){ //若调用 scanf 函数
+        return gen.emitScanf(gen, args);
+    } else if(identifier->getname() == "gets") { // 若调用 gets 函数
+        return gen.emitGets(gen, args);
     }
 
-    //在module中查找以identifier命名的函数
-    llvm::Function *func = gen.Module->getFunction(identifier.name.c_str());
+    // 在module中查找以identifier命名的函数
+    llvm::Function *func = gen.myModule->getFunction(identifier->name->c_str());
     if (func == NULL) {
-		std::cerr << "no such function " << identifier.name << endl;
-	}
+        std::cerr << "no such function " << *(identifier->name) << endl;
+    }
 
     vector<llvm::Value*> tmp;
-    vector<ExpressionNode*>::iterator i;
+    vector<ExpNode*>::iterator i;
     for(auto i : args){  //对每个ExpressionNode进行emit 并将结果存入tmp中
         tmp.push_back((*i).genCode(gen));
+        if (tmp.back()->getType()->isPointerTy()) {
+            tmp.back() = Builder.CreateLoad(tmp.back()->getType(), tmp.back());
+        }
     }
     //调用
-    llvm::CallInst *call = llvm::CallInst::Create(func,llvm::makeArrayRef(tmp),"",Builder.GetInsertBlock());
-    cout << "Creating method call: " << identifier.name << endl;
-	return call;
+    llvm::CallInst *call = llvm::CallInst::Create(func, llvm::makeArrayRef(tmp), "", Builder.GetInsertBlock());
+    return call;
 
 }
 
