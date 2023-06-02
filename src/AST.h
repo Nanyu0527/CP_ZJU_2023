@@ -167,7 +167,7 @@ public:
 };
 class AssignNode : public ExpNode{
 public:
-    AssignNode(IdentifierNode *_identifier, ExpNode *_index) :lhs(_index), identifier(_identifier) {}
+    AssignNode(IdentifierNode *_identifier, ExpNode *_index) :rhs(_index), lhs(_identifier) {}
     
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
