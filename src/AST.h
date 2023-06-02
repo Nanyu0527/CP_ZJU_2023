@@ -43,7 +43,7 @@ public:
         int i;
         double d;
         float f;
-        char c;
+        string c;
     };
 };
 
@@ -72,7 +72,7 @@ public:
 };
 class CharNode : public Const{
 public:
-    CharNode(char value) : value(value){}
+    CharNode(string value) : value(value){}
     virtual C_TYPE getType(){ return C_CHAR;}
     virtual Const::Value getValue(){
         Const::Value v;
@@ -82,7 +82,7 @@ public:
     
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
-    char value;
+    string value;
 };
 
 class DoubleNode : public Const{
@@ -171,8 +171,8 @@ public:
     
     virtual llvm::Value *genCode(CodeGenerator & gen);
 
-    IdentifierNode *identifier;
-    ExpNode *lhs;
+    IdentifierNode *lhs;
+    ExpNode *rhs;
 };
 class BlockNode : public ExpNode{
 public:

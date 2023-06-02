@@ -486,7 +486,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  30
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   355
+#define YYLAST   378
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  46
@@ -548,12 +548,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    46,    46,    50,    51,    54,    55,    56,    57,    58,
-      59,    60,    61,    62,    63,    67,    68,    71,    72,    73,
-      76,    81,    82,    83,    89,    92,    95,    98,   101,   106,
-     109,   113,   118,   119,   120,   121,   122,   123,   124,   125,
-     126,   127,   128,   129,   130,   131,   132,   133,   134,   135,
-     136,   137,   138
+       0,    49,    49,    53,    54,    57,    58,    59,    60,    61,
+      62,    63,    64,    65,    66,    70,    71,    74,    75,    76,
+      79,    84,    85,    86,    92,    95,    98,   101,   104,   109,
+     112,   116,   121,   122,   123,   124,   125,   126,   127,   128,
+     129,   130,   131,   132,   133,   134,   135,   136,   137,   138,
+     139,   140,   141
 };
 #endif
 
@@ -601,12 +601,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 static const yytype_int16 yypact[] =
 {
      114,    -9,    -5,    62,    -4,    -2,   223,   -20,   -53,   -53,
-     -53,   -53,   -53,    22,   114,   -53,     8,   -53,   311,   -53,
+     -53,   -53,   -53,    22,   114,   -53,     8,   -53,   334,   -53,
      149,   -53,   223,   -53,    37,   156,   223,   223,   183,     1,
      -53,   -53,   -53,   223,   223,   223,   -10,   223,   223,   223,
      223,   223,   223,   -53,   223,   223,   223,   223,   223,   223,
      197,   -53,   211,   238,   -53,   223,   315,   247,   -15,   315,
-     223,   -20,   -12,   315,   315,   315,   315,   315,   315,   315,
+     223,   -20,   -12,   315,   315,   315,   315,   315,   315,   321,
      315,   315,   315,   315,   315,    12,    12,   223,   274,     9,
      223,   -53,   315,   -53,   -14,   -20,    11,    67,    45,   -53,
      281,   -53,   223,   315,   -20,    12,    -8,   -53,   -53,   108,
@@ -685,9 +685,11 @@ static const yytype_int8 yytable[] =
        0,     0,     0,    44,    45,    46,    47,     0,    48,    49,
       44,    45,    46,    47,     0,    48,    49,    37,    38,    39,
       40,    41,    42,   108,    37,    38,    39,    40,    41,    42,
-       0,    33,     0,     0,    34,     0,     0,    44,    45,    46,
+      37,    38,    39,    40,    41,    42,     0,    44,    45,    46,
       47,     0,    48,    49,    44,    45,    46,    47,     0,    48,
-      49,     9,     0,     0,     0,    35
+      49,    45,    46,    47,    33,    48,    49,    34,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     9,     0,     0,     0,    35
 };
 
 static const yytype_int8 yycheck[] =
@@ -725,9 +727,11 @@ static const yytype_int8 yycheck[] =
       -1,    -1,    -1,    29,    30,    31,    32,    -1,    34,    35,
       29,    30,    31,    32,    -1,    34,    35,     9,    10,    11,
       12,    13,    14,    15,     9,    10,    11,    12,    13,    14,
-      -1,    20,    -1,    -1,    23,    -1,    -1,    29,    30,    31,
+       9,    10,    11,    12,    13,    14,    -1,    29,    30,    31,
       32,    -1,    34,    35,    29,    30,    31,    32,    -1,    34,
-      35,    40,    -1,    -1,    -1,    44
+      35,    30,    31,    32,    20,    34,    35,    23,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    40,    -1,    -1,    -1,    44
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -1231,311 +1235,311 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: stmlist  */
-#line 46 "c.y"
+#line 49 "c.y"
        {
     root = (yyvsp[0].block);
 }
-#line 1239 "lab_yacc.cpp"
+#line 1243 "lab_yacc.cpp"
     break;
 
   case 3: /* stmlist: stm  */
-#line 50 "c.y"
+#line 53 "c.y"
    {(yyval.block) = new BlockNode();}
-#line 1245 "lab_yacc.cpp"
+#line 1249 "lab_yacc.cpp"
     break;
 
   case 7: /* stm: exp SEMICOLON  */
-#line 56 "c.y"
+#line 59 "c.y"
                {(yyval.stm) = new ExpStmNode((yyvsp[-1].exp));}
-#line 1251 "lab_yacc.cpp"
+#line 1255 "lab_yacc.cpp"
     break;
 
   case 8: /* stm: RETURN SEMICOLON  */
-#line 57 "c.y"
+#line 60 "c.y"
                   {(yyval.stm) = new ReturnNULLStmNode();}
-#line 1257 "lab_yacc.cpp"
+#line 1261 "lab_yacc.cpp"
     break;
 
   case 9: /* stm: RETURN exp SEMICOLON  */
-#line 58 "c.y"
+#line 61 "c.y"
                       {(yyval.stm) = new ReturnStmNode((yyvsp[-1].exp));}
-#line 1263 "lab_yacc.cpp"
+#line 1267 "lab_yacc.cpp"
     break;
 
   case 10: /* stm: BREAK SEMICOLON  */
-#line 59 "c.y"
+#line 62 "c.y"
                  {(yyval.stm) = new BreakStmNode();}
-#line 1269 "lab_yacc.cpp"
+#line 1273 "lab_yacc.cpp"
     break;
 
   case 11: /* stm: IF LPARENT exp RPARENT block  */
-#line 60 "c.y"
+#line 63 "c.y"
                                {(yyval.stm) =new IfStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
-#line 1275 "lab_yacc.cpp"
+#line 1279 "lab_yacc.cpp"
     break;
 
   case 12: /* stm: IF LPARENT exp RPARENT block ELSE block  */
-#line 61 "c.y"
+#line 64 "c.y"
                                           {(yyval.stm) = new IfElseStmNode((yyvsp[-4].exp),(yyvsp[-2].block),(yyvsp[0].block));}
-#line 1281 "lab_yacc.cpp"
+#line 1285 "lab_yacc.cpp"
     break;
 
   case 13: /* stm: WHILE LPARENT exp RPARENT block  */
-#line 62 "c.y"
+#line 65 "c.y"
                                   {(yyval.stm) = new WhileStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
-#line 1287 "lab_yacc.cpp"
+#line 1291 "lab_yacc.cpp"
     break;
 
   case 14: /* stm: FOR LPARENT exp SEMICOLON exp SEMICOLON exp SEMICOLON RPARENT block  */
-#line 63 "c.y"
+#line 66 "c.y"
                                                                       {(yyval.stm) = new ForStmNode((yyvsp[-7].exp),(yyvsp[-5].exp),(yyvsp[-3].exp),(yyvsp[0].block));}
-#line 1293 "lab_yacc.cpp"
+#line 1297 "lab_yacc.cpp"
     break;
 
   case 15: /* block: LBRACE stmlist RBRACE  */
-#line 67 "c.y"
+#line 70 "c.y"
                      {(yyval.block) = (yyvsp[-1].block);}
-#line 1299 "lab_yacc.cpp"
+#line 1303 "lab_yacc.cpp"
     break;
 
   case 16: /* block: LBRACE RBRACE  */
-#line 68 "c.y"
+#line 71 "c.y"
                {(yyval.block) = new BlockNode();}
-#line 1305 "lab_yacc.cpp"
+#line 1309 "lab_yacc.cpp"
     break;
 
   case 17: /* vardec: identifier identifier  */
-#line 71 "c.y"
+#line 74 "c.y"
                      {(yyval.stm) = new VarDecNode((yyvsp[-1].identifier),(yyvsp[0].identifier));}
-#line 1311 "lab_yacc.cpp"
+#line 1315 "lab_yacc.cpp"
     break;
 
   case 18: /* vardec: identifier identifier ASSIGN exp  */
-#line 72 "c.y"
+#line 75 "c.y"
                                   {(yyval.stm) = new VarDecNode((yyvsp[-3].identifier),(yyvsp[-2].identifier),(yyvsp[0].exp));}
-#line 1317 "lab_yacc.cpp"
+#line 1321 "lab_yacc.cpp"
     break;
 
   case 19: /* vardec: identifier identifier LBRACKET INTEGER RBRACKET  */
-#line 73 "c.y"
+#line 76 "c.y"
                                                      {(yyval.stm) = new VarDecNode((yyvsp[-4].identifier),(yyvsp[-3].identifier),(yyvsp[-1].iVal));}
-#line 1323 "lab_yacc.cpp"
+#line 1327 "lab_yacc.cpp"
     break;
 
   case 20: /* fundec: identifier identifier LPARENT fun_args RPARENT block  */
-#line 76 "c.y"
+#line 79 "c.y"
                                                     {
     (yyval.stm) = new FunDecNode((yyvsp[-5].identifier), (yyvsp[-4].identifier), (yyvsp[-2].vardeclist), (yyvsp[0].block));
 }
-#line 1331 "lab_yacc.cpp"
+#line 1335 "lab_yacc.cpp"
     break;
 
   case 21: /* fun_args: %empty  */
-#line 81 "c.y"
+#line 84 "c.y"
  {(yyval.vardeclist) = new std::vector<VarDecNode*>();}
-#line 1337 "lab_yacc.cpp"
+#line 1341 "lab_yacc.cpp"
     break;
 
   case 22: /* fun_args: fun_args COMMA vardec  */
-#line 82 "c.y"
+#line 85 "c.y"
                        {(yyvsp[-2].vardeclist) -> push_back((yyvsp[0].stm));}
-#line 1343 "lab_yacc.cpp"
+#line 1347 "lab_yacc.cpp"
     break;
 
   case 23: /* fun_args: vardec  */
-#line 83 "c.y"
+#line 86 "c.y"
         {
     (yyval.vardeclist) = new std::vector<VarDecNode*>();
     (yyval.vardeclist) -> push_back((yyvsp[0].stm));
 }
-#line 1352 "lab_yacc.cpp"
+#line 1356 "lab_yacc.cpp"
     break;
 
   case 24: /* identifier: IDENTIFIER  */
-#line 89 "c.y"
+#line 92 "c.y"
            {(yyval.identifier) = new IdentifierNode((yyvsp[0].iVal));}
-#line 1358 "lab_yacc.cpp"
+#line 1362 "lab_yacc.cpp"
     break;
 
   case 25: /* constant: INTEGER  */
-#line 92 "c.y"
+#line 95 "c.y"
          {
     (yyval.exp) = new IntNode((yyvsp[0].iVal));
 }
-#line 1366 "lab_yacc.cpp"
+#line 1370 "lab_yacc.cpp"
     break;
 
   case 26: /* constant: REAL  */
-#line 95 "c.y"
+#line 98 "c.y"
        {
     (yyval.exp) = new DoubleNode((yyvsp[0].dVal));
 }
-#line 1374 "lab_yacc.cpp"
+#line 1378 "lab_yacc.cpp"
     break;
 
   case 27: /* constant: CHAR  */
-#line 98 "c.y"
+#line 101 "c.y"
       {
     (yyval.exp) = new CharNode((yyvsp[0].cVal));
 }
-#line 1382 "lab_yacc.cpp"
+#line 1386 "lab_yacc.cpp"
     break;
 
   case 28: /* constant: STRING  */
-#line 101 "c.y"
+#line 104 "c.y"
         {
     (yyval.exp) = new StringNode(*(yyvsp[0].sVal));
 }
-#line 1390 "lab_yacc.cpp"
+#line 1394 "lab_yacc.cpp"
     break;
 
   case 29: /* call_args: %empty  */
-#line 106 "c.y"
+#line 109 "c.y"
     {
         (yyval.explist) = new std::vector<ExpressionNode*>();
     }
-#line 1398 "lab_yacc.cpp"
+#line 1402 "lab_yacc.cpp"
     break;
 
   case 30: /* call_args: exp  */
-#line 109 "c.y"
+#line 112 "c.y"
           {
         (yyval.explist) = new std::vector<ExpressionNode*>();
         (yyval.explist)->push_back((yyvsp[0].exp));
     }
-#line 1407 "lab_yacc.cpp"
+#line 1411 "lab_yacc.cpp"
     break;
 
   case 31: /* call_args: call_args COMMA exp  */
-#line 113 "c.y"
+#line 116 "c.y"
                           {
         (yyvsp[-2].explist)->push_back((yyvsp[0].exp));
     }
-#line 1415 "lab_yacc.cpp"
+#line 1419 "lab_yacc.cpp"
     break;
 
   case 32: /* exp: identifier ASSIGN exp  */
-#line 118 "c.y"
+#line 121 "c.y"
                      {(yyval.exp) = new AssignNode((yyvsp[-2].identifier),(yyvsp[0].exp));}
-#line 1421 "lab_yacc.cpp"
+#line 1425 "lab_yacc.cpp"
     break;
 
   case 33: /* exp: identifier '(' call_args ')'  */
-#line 119 "c.y"
+#line 122 "c.y"
                                {(yyval.exp) = new FunCallNode((yyvsp[-3].identifier),(yyvsp[-1].explist));}
-#line 1427 "lab_yacc.cpp"
+#line 1431 "lab_yacc.cpp"
     break;
 
   case 34: /* exp: exp PLUS exp  */
-#line 120 "c.y"
-               {(yyval.exp) = new BinOpNode(1,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1433 "lab_yacc.cpp"
+#line 123 "c.y"
+               {(yyval.exp) = new BinOpNode(*(yyvsp[-1].token),(yyvsp[-2].exp),(yyvsp[0].exp));}
+#line 1437 "lab_yacc.cpp"
     break;
 
   case 35: /* exp: exp MINUS exp  */
-#line 121 "c.y"
+#line 124 "c.y"
                 {(yyval.exp) = new BinOpNode(2,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1439 "lab_yacc.cpp"
+#line 1443 "lab_yacc.cpp"
     break;
 
   case 36: /* exp: exp MUL exp  */
-#line 122 "c.y"
+#line 125 "c.y"
               {(yyval.exp) = new BinOpNode(3,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1445 "lab_yacc.cpp"
+#line 1449 "lab_yacc.cpp"
     break;
 
   case 37: /* exp: exp DIV exp  */
-#line 123 "c.y"
+#line 126 "c.y"
               {(yyval.exp) = new BinOpNode(4,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1451 "lab_yacc.cpp"
+#line 1455 "lab_yacc.cpp"
     break;
 
   case 38: /* exp: exp AND exp  */
-#line 124 "c.y"
+#line 127 "c.y"
               {(yyval.exp) = new BinOpNode(5,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1457 "lab_yacc.cpp"
+#line 1461 "lab_yacc.cpp"
     break;
 
   case 39: /* exp: exp OR exp  */
-#line 125 "c.y"
+#line 128 "c.y"
              {(yyval.exp) = new BinOpNode(6,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1463 "lab_yacc.cpp"
+#line 1467 "lab_yacc.cpp"
     break;
 
   case 40: /* exp: exp LE exp  */
-#line 126 "c.y"
+#line 129 "c.y"
              {(yyval.exp) = new BinOpNode(7,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1469 "lab_yacc.cpp"
+#line 1473 "lab_yacc.cpp"
     break;
 
   case 41: /* exp: exp GE exp  */
-#line 127 "c.y"
+#line 130 "c.y"
              {(yyval.exp) = new BinOpNode(8,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1475 "lab_yacc.cpp"
+#line 1479 "lab_yacc.cpp"
     break;
 
   case 42: /* exp: exp EQ exp  */
-#line 128 "c.y"
+#line 131 "c.y"
              {(yyval.exp) = new BinOpNode(9,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1481 "lab_yacc.cpp"
+#line 1485 "lab_yacc.cpp"
     break;
 
   case 43: /* exp: exp NE exp  */
-#line 129 "c.y"
+#line 132 "c.y"
              {(yyval.exp) = new BinOpNode(10,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1487 "lab_yacc.cpp"
+#line 1491 "lab_yacc.cpp"
     break;
 
   case 44: /* exp: exp LT exp  */
-#line 130 "c.y"
+#line 133 "c.y"
              {(yyval.exp) = new BinOpNode(11,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1493 "lab_yacc.cpp"
+#line 1497 "lab_yacc.cpp"
     break;
 
   case 45: /* exp: exp GT exp  */
-#line 131 "c.y"
+#line 134 "c.y"
              {(yyval.exp) = new BinOpNode(12,(yyvsp[-2].exp),(yyvsp[0].exp));}
-#line 1499 "lab_yacc.cpp"
+#line 1503 "lab_yacc.cpp"
     break;
 
   case 46: /* exp: identifier LBRACKET exp RBRACKET  */
-#line 132 "c.y"
+#line 135 "c.y"
                                        {(yyval.exp) = new ArrayEleNode((yyvsp[-3].identifier),(yyvsp[-1].exp));}
-#line 1505 "lab_yacc.cpp"
+#line 1509 "lab_yacc.cpp"
     break;
 
   case 47: /* exp: identifier LBRACKET exp RBRACKET ASSIGN exp  */
-#line 133 "c.y"
+#line 136 "c.y"
                                                   {(yyval.exp) = new ArrayAssNode((yyvsp[-5].identifier),(yyvsp[-3].exp),(yyvsp[0].exp));}
-#line 1511 "lab_yacc.cpp"
+#line 1515 "lab_yacc.cpp"
     break;
 
   case 48: /* exp: identifier  */
-#line 134 "c.y"
+#line 137 "c.y"
              { (yyval.exp) = (yyvsp[0].identifier) ;}
-#line 1517 "lab_yacc.cpp"
+#line 1521 "lab_yacc.cpp"
     break;
 
   case 49: /* exp: MUL identifier  */
-#line 135 "c.y"
+#line 138 "c.y"
                  {(yyval.exp) = getAddrNode((yyvsp[0].identifier));}
-#line 1523 "lab_yacc.cpp"
+#line 1527 "lab_yacc.cpp"
     break;
 
   case 50: /* exp: MUL identifier LBRACKET exp RBRACKET  */
-#line 136 "c.y"
+#line 139 "c.y"
                                        {(yyval.exp) = getArrayAddrNode((yyvsp[-3].identifier),(yyvsp[-1].exp));}
-#line 1529 "lab_yacc.cpp"
+#line 1533 "lab_yacc.cpp"
     break;
 
   case 52: /* exp: LPARENT exp RPARENT  */
-#line 138 "c.y"
+#line 141 "c.y"
                      {(yyval.exp) = (yyvsp[-1].exp)}
-#line 1535 "lab_yacc.cpp"
+#line 1539 "lab_yacc.cpp"
     break;
 
 
-#line 1539 "lab_yacc.cpp"
+#line 1543 "lab_yacc.cpp"
 
       default: break;
     }
@@ -1728,7 +1732,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 140 "c.y"
+#line 143 "c.y"
 
 void yyerror(char *str){
     fprintf(stderr,"error:%s\n",str);

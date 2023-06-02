@@ -22,9 +22,9 @@
 
 }
 
-%token BREAK ELSE IF RETURN WHILE FOR AND OR LE GE EQ NE SEMICOLON LBRACE RBRACE
-%token COMMA COLON ASSIGN LPARENT RPARENT LBRACKET RBRACKET
-%token DOT BITAND NOT BITNOT PLUS MINUS MUL DIV MOD LT GT BITXOR BITOR INTERROGATION
+%token<token> BREAK ELSE IF RETURN WHILE FOR AND OR LE GE EQ NE SEMICOLON LBRACE RBRACE
+%token<token> COMMA COLON ASSIGN LPARENT RPARENT LBRACKET RBRACKET
+%token<token> DOT BITAND NOT BITNOT PLUS MINUS MUL DIV MOD LT GT BITXOR BITOR INTERROGATION
 
 
 
@@ -40,6 +40,9 @@
 %type <explist> call_args
 %type <vardeclist> fun_args
 %type <block> program block stmlist
+
+
+%left PLUS
 
 %%
 program:
@@ -117,7 +120,7 @@ call_args:
 exp:
 identifier ASSIGN exp{$$ = new AssignNode($1,$3);}
 | identifier '(' call_args ')' {$$ = new FunCallNode($1,$3);}
-| exp PLUS exp {$$ = new BinOpNode(1,$1,$3);}
+| exp PLUS exp {$$ = new BinOpNode(*$2,$1,$3);}
 | exp MINUS exp {$$ = new BinOpNode(2,$1,$3);}
 | exp MUL exp {$$ = new BinOpNode(3,$1,$3);}
 | exp DIV exp {$$ = new BinOpNode(4,$1,$3);}
