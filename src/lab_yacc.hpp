@@ -54,47 +54,46 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    BREAK = 258,                   /* BREAK  */
-    ELSE = 259,                    /* ELSE  */
-    IF = 260,                      /* IF  */
-    RETURN = 261,                  /* RETURN  */
-    WHILE = 262,                   /* WHILE  */
-    FOR = 263,                     /* FOR  */
-    AND = 264,                     /* AND  */
-    OR = 265,                      /* OR  */
-    LE = 266,                      /* LE  */
-    GE = 267,                      /* GE  */
-    EQ = 268,                      /* EQ  */
-    NE = 269,                      /* NE  */
-    SEMICOLON = 270,               /* SEMICOLON  */
-    LBRACE = 271,                  /* LBRACE  */
-    RBRACE = 272,                  /* RBRACE  */
-    COMMA = 273,                   /* COMMA  */
-    COLON = 274,                   /* COLON  */
-    ASSIGN = 275,                  /* ASSIGN  */
-    LPARENT = 276,                 /* LPARENT  */
-    RPARENT = 277,                 /* RPARENT  */
-    LBRACKET = 278,                /* LBRACKET  */
-    RBRACKET = 279,                /* RBRACKET  */
-    DOT = 280,                     /* DOT  */
-    BITAND = 281,                  /* BITAND  */
-    NOT = 282,                     /* NOT  */
-    BITNOT = 283,                  /* BITNOT  */
-    PLUS = 284,                    /* PLUS  */
-    MINUS = 285,                   /* MINUS  */
-    MUL = 286,                     /* MUL  */
-    DIV = 287,                     /* DIV  */
-    MOD = 288,                     /* MOD  */
-    LT = 289,                      /* LT  */
-    GT = 290,                      /* GT  */
-    BITXOR = 291,                  /* BITXOR  */
-    BITOR = 292,                   /* BITOR  */
-    INTERROGATION = 293,           /* INTERROGATION  */
-    INTEGER = 294,                 /* INTEGER  */
-    IDENTIFIER = 295,              /* IDENTIFIER  */
-    REAL = 296,                    /* REAL  */
-    CHAR = 297,                    /* CHAR  */
-    STRING = 298                   /* STRING  */
+    CHAR = 258,                    /* CHAR  */
+    INTEGER = 259,                 /* INTEGER  */
+    STRING = 260,                  /* STRING  */
+    REAL = 261,                    /* REAL  */
+    IDENTIFER = 262,               /* IDENTIFER  */
+    IF = 263,                      /* IF  */
+    ELSE = 264,                    /* ELSE  */
+    BREAK = 265,                   /* BREAK  */
+    RETURN = 266,                  /* RETURN  */
+    WHILE = 267,                   /* WHILE  */
+    AND = 268,                     /* AND  */
+    OR = 269,                      /* OR  */
+    LT = 270,                      /* LT  */
+    GT = 271,                      /* GT  */
+    LE = 272,                      /* LE  */
+    GE = 273,                      /* GE  */
+    EQ = 274,                      /* EQ  */
+    NE = 275,                      /* NE  */
+    MINUS = 276,                   /* MINUS  */
+    PLUS = 277,                    /* PLUS  */
+    MUL = 278,                     /* MUL  */
+    DIV = 279,                     /* DIV  */
+    MOD = 280,                     /* MOD  */
+    SEMICOLON = 281,               /* SEMICOLON  */
+    LBRACE = 282,                  /* LBRACE  */
+    RBRACE = 283,                  /* RBRACE  */
+    COMMA = 284,                   /* COMMA  */
+    COLON = 285,                   /* COLON  */
+    ASSIGN = 286,                  /* ASSIGN  */
+    LPARENT = 287,                 /* LPARENT  */
+    RPARENT = 288,                 /* RPARENT  */
+    LBRACKET = 289,                /* LBRACKET  */
+    RBRACKET = 290,                /* RBRACKET  */
+    DOT = 291,                     /* DOT  */
+    INTERROGATION = 292,           /* INTERROGATION  */
+    BITAND = 293,                  /* BITAND  */
+    BITNOT = 294,                  /* BITNOT  */
+    BITOR = 295,                   /* BITOR  */
+    BITXOR = 296,                  /* BITXOR  */
+    NOT = 297                      /* NOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,25 +102,24 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 7 "c.y"
+#line 15 "c.y"
 
-    int iVal;
+	int iVal;
     std::string *sVal;
     double dVal;
     char cVal;
-    Node *node;
-    ExpNode *exp;
+	Node *node;
+	IdentifierNode *identifier;
+	BlockNode *block;
+	ExpNode *exp;
     StmNode *stm;
-    IdentifierNode *identifier;
-    BlockNode *block;
-    VarDecNode *vardec;
-    std::string *str;
-    // std::vector<stm*> *stmlist;
-    std::vector<exp*> *explist;
-    std::vector<vardec*> *vardeclist;
+    int token;
+	VarDecNode *vardec;
+	vector<StmNode*> *stmlist;
+    vector<ExpNode*> *explist;
+    vector<VarDecNode*> *vardeclist;
 
-
-#line 125 "lab_yacc.hpp"
+#line 123 "lab_yacc.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

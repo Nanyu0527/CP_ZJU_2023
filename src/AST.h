@@ -4,9 +4,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Value.h>
 #include "llvm/ADT/STLExtras.h"
-#include <llvm/IR/IRBuilder.h>
+
 
 extern llvm::LLVMContext globalContext;
 extern llvm::IRBuilder<> Builder;

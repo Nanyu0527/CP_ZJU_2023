@@ -15,7 +15,6 @@ char SecondChar(char ch);
 "if"            { return IF;       }
 "return"        { return RETURN;   }
 "while"         { return WHILE;    }
-"for"           { return FOR;      }
 
 "&&"            { return AND; }
 "||"            { return OR; }
@@ -37,7 +36,7 @@ char SecondChar(char ch);
 "&"             { return BITAND; }
 "!"             { return NOT; }
 "~"             { return BITNOT; }
-"-"             { return SUB; }
+"-"             { return MINUS; }
 "+"             { return PLUS; }
 "*"             { return MUL; }
 "/"             { return DIV; }
@@ -64,13 +63,17 @@ char SecondChar(char ch);
 								yylval.iVal = itmp; 
 								return INTEGER; 
 							}
-\'.\'         				{ 
-								yylval.cVal = yytext[1];
-								return CHAR;
+\'.\'         				{ 	char str[] = "a";
+								char cVal = SecondChar(yytext[1]);
+								str[0] = cVal;
+								yylval.sVal = new std::string(str,1);
+								return STRING;
 							}
-\'\\.\'   					{
-								yyval.cVal = SecondChar(yytext[2]);
-								return CHAR;
+\'\\.\'   					{	char str[] = "a";
+								char cVal = SecondChar(yytext[2]);
+								str[0] = cVal;
+								yylval.sVal = new std::string(str,1);
+								return STRING;
 							}					
 \"(\\.|[^"\\])*\"      		{	
 								yylval.sVal = new std::string(yytext, yyleng);
@@ -80,7 +83,7 @@ char SecondChar(char ch);
 								yylval.sVal = new std::string(yytext, yyleng);
 								return IDENTIFER;
 							}								
-.							{printf("UNKNOWN TOKEN : %s ,AT LINENUMBER:%d\n",yytext,linenumber);}
+.							{printf("UNKNOWN TOKEN : %s ",yytext);}
 %%
 int yywrap(void)
 {
