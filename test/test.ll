@@ -1,17 +1,10 @@
-; ModuleID = 'main'
-source_filename = "main"
-
-declare i32 @printf(i8*, ...)
-
-declare i32 @scanf(...)
-
-declare i32 @gets(...)
-
-define i32 @main() {
-entry:
-  %0 = alloca i32, align 4
-
-return:                                           ; No predecessors!
-  %1 = load i32, i32* %0, align 4
-  ret i32 %1
-}
+Generating code for 10FunDecNode
+Generating code for 10VarDecNode
+AssignmentNode,lhs: a
+IntNode : 1
+Generating code for 10ExpStmNode
+Generating code for P7ExpNode
+AssignmentNode,lhs: a
+IntNode : 2
+Generating code for 10ExpStmNode
+Generating code for P7ExpNode

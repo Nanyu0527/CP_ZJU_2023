@@ -88,7 +88,8 @@ char SecondChar(char ch);
 								yylval.sVal = new std::string(yytext, yyleng);
 								return IDENTIFER;
 							}								
-.							{printf("UNKNOWN TOKEN : %s ",yytext);}
+" "							{}
+.               			{ printf("unknown token : %s\n", yytext); }
 %%
 int yywrap(void)
 {
