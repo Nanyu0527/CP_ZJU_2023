@@ -9,7 +9,7 @@ line            \n
 #include"AST.h"
 #include"lab_yacc.hpp"
 char SecondChar(char ch);
-
+#define TOKEN(t) (yylval.token = t)
 %}
 
 %%
@@ -21,12 +21,12 @@ char SecondChar(char ch);
 "return"        { return RETURN;   }
 "while"         { return WHILE;    }
 
-"&&"            { return AND; }
-"||"            { return OR; }
-"<="            { return LE; }
-">="            { return GE; }
-"=="            { return EQ; }
-"!="            { return NE; }
+"&&"            { return TOKEN(AND); }
+"||"            { return TOKEN(OR); }
+"<="            { return TOKEN(LE); }
+">="            { return TOKEN(GE); }
+"=="            { return TOKEN(EQ); }
+"!="            { return TOKEN(NE); }
 ";"             { return SEMICOLON; }
 "{"             { return LBRACE; }
 "}"             { return RBRACE; }
@@ -41,15 +41,15 @@ char SecondChar(char ch);
 "&"             { return BITAND; }
 "!"             { return NOT; }
 "~"             { return BITNOT; }
-"-"             { return MINUS; }
-"+"             { return PLUS; }
-"*"             { return MUL; }
-"/"             { return DIV; }
-"%"             { return MOD; }
-"<"             { return LT; }
-">"             { return GT; }
-"^"             { return BITXOR; }
-"|"             { return BITOR; }
+"-"             { return TOKEN(MINUS); }
+"+"             { return TOKEN(PLUS); }
+"*"             { return TOKEN(MUL); }
+"/"             { return TOKEN(DIV); }
+"%"             { return TOKEN(MOD); }
+"<"             { return TOKEN(LT); }
+">"             { return TOKEN(GT); }
+"^"             { return TOKEN(BITXOR); }
+"|"             { return TOKEN(BITOR); }
 "?"             { return INTERROGATION; }
 
 \/\/.*\n					{;}
@@ -88,8 +88,7 @@ char SecondChar(char ch);
 								yylval.sVal = new std::string(yytext, yyleng);
 								return IDENTIFER;
 							}								
-" "							{}
-.               			{ printf("unknown token : %s\n", yytext); }
+.               			{ if(yytext[0]!=' ') printf("unknown token : %s\n", yytext); }
 %%
 int yywrap(void)
 {

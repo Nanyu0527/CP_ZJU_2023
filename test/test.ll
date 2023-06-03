@@ -5,6 +5,11 @@ IntNode : 1
 Generating code for 10ExpStmNode
 Generating code for P7ExpNode
 AssignmentNode,lhs: a
-IntNode : 2
+IntNode : 1
 Generating code for 10ExpStmNode
 Generating code for P7ExpNode
+我他妈来啦
+11111
+22222
+33333
+44444

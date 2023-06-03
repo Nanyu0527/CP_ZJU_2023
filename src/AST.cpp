@@ -6,16 +6,13 @@ stack<llvm::BasicBlock *> GlobalAfterBB;
 llvm::LLVMContext globalContext;
 llvm::IRBuilder<> Builder(globalContext);
 
-vector<llvm::Value *> *getPrintfArgs(CodeGenerator &Context,vector<ExpNode*>args){
+vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>args){
     vector<llvm::Value *> *printf_args = new vector<llvm::Value *>;
-    int flag=0;
-    for(auto it: args) {
-        llvm::Value* tmp = it->genCode(Context);
-        if (flag)
-            if (tmp->getType()->isPointerTy())   
-                tmp = Builder.CreateLoad( tmp->getType()->getPointerElementType() ,tmp, "tmp_load");
+    for(auto it: args){
+        llvm::Value* tmp = it->genCode(emitContext);
+        if (tmp->getType() == llvm::Type::getFloatTy(globalContext))
+            tmp = Builder.CreateFPExt(tmp, llvm::Type::getDoubleTy(globalContext), "tmpdouble");
         printf_args->push_back(tmp);
-        flag++;
     }
     return printf_args;
 }

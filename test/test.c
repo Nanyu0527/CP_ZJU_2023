@@ -1,6 +1,7 @@
+
 int main(){
     int a=1;
-    a=2;
-    scanf("%d",&a);
-    
+    a=1;
+    printf("a = 1\n");
+    return 0;
 }
