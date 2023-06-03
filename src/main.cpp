@@ -5,7 +5,7 @@
 #include <llvm/Support/TargetSelect.h>
 
 extern int yyparse(void);
-extern StmNode* root;
+extern BlockNode* root;
 
 int main(){
     string inputfile_name = "./test/test.c";

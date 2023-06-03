@@ -1,0 +1,6 @@
+/home/cxc/project/CMakeFiles/intrinsics_gen.dir
+/home/cxc/project/CMakeFiles/omp_gen.dir
+/home/cxc/project/CMakeFiles/acc_gen.dir
+/home/cxc/project/CMakeFiles/Compiler.dir
+/home/cxc/project/CMakeFiles/edit_cache.dir
+/home/cxc/project/CMakeFiles/rebuild_cache.dir

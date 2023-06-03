@@ -1,3 +1,6 @@
+#ifndef CODEGENERATOR
+#define CODEGENERATOR
+
 #include <llvm/IR/BasicBlock.h>
 #include <llvm/IR/Value.h>
 #include <map>
@@ -31,12 +34,11 @@
 #include <llvm/IR/Verifier.h>
 #include <llvm/Support/raw_ostream.h>
 
-
 #include "AST.h"
 using namespace std;
 
-llvm::LLVMContext globalContext;
-llvm::IRBuilder<> Builder(globalContext);
+extern llvm::LLVMContext globalContext;
+extern llvm::IRBuilder<> Builder;
 
 class symbolTable {
     public:
@@ -45,8 +47,6 @@ class symbolTable {
 };
 
 class CodeGenerator{
-    
-
 public:
     vector<symbolTable *> symbolTable_stack; 
     llvm::Module *myModule; 
@@ -75,12 +75,14 @@ public:
     llvm::Function* getPrintf(); 
     llvm::Function* getScanf(); 
     llvm::Function* getGets(); 
-    llvm:: Value* emitScanf(CodeGenerator &emitContext,vector<ExpNode*> args);
-    llvm:: Value* emitPrintf(CodeGenerator &emitContext,vector<ExpNode*> args);
-    llvm:: Value* emitGets(CodeGenerator &emitContext,vector<ExpNode*> args);
-    vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
-    vector<llvm::Value *> *getScanfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
-    vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
-    void Run(StmNode* Root); 
+    // llvm:: Value* emitScanf(CodeGenerator &emitContext,vector<ExpNode*> args);
+    // llvm:: Value* emitPrintf(CodeGenerator &emitContext,vector<ExpNode*> args);
+    // llvm:: Value* emitGets(CodeGenerator &emitContext,vector<ExpNode*> args);
+    // vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
+    // vector<llvm::Value *> *getScanfArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
+    // vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args);
+    void Run(BlockNode* Root); 
     void PrintIRCode(string FileName);
 };
+
+#endif

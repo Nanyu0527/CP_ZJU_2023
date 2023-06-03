@@ -131,13 +131,13 @@ identifier ASSIGN exp{$$ = new AssignNode($<identifier>1, $3);}
 |const_value
 ;
 %%
-void yyerror(char *str){
-    fprintf(stderr,"error:%s\n",str);
-}    
+// void yyerror(char *str){
+//     fprintf(stderr,"error:%s\n",str);
+// }    
 
-int yywrap(){
-    return 1;
-}
-int main(){
-    yyparse();
-}
+// int yywrap(){
+//     return 1;
+// }
+// int main(){
+//     yyparse();
+// }

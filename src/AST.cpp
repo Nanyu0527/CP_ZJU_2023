@@ -1,8 +1,54 @@
 #include "AST.h"
-#include "CodeGenerator.hpp"
 #include "lab_yacc.hpp"
+#include "CodeGenerator.hpp"
 
 stack<llvm::BasicBlock *> GlobalAfterBB;
+llvm::LLVMContext globalContext;
+llvm::IRBuilder<> Builder(globalContext);
+
+vector<llvm::Value *> *getPrintfArgs(CodeGenerator &Context,vector<ExpNode*>args){
+    vector<llvm::Value *> *printf_args = new vector<llvm::Value *>;
+    int flag=0;
+    for(auto it: args) {
+        llvm::Value* tmp = it->genCode(Context);
+        if (flag)
+            if (tmp->getType()->isPointerTy())   
+                tmp = Builder.CreateLoad( tmp->getType()->getPointerElementType() ,tmp, "tmp_load");
+        printf_args->push_back(tmp);
+        flag++;
+    }
+    return printf_args;
+}
+
+vector<llvm::Value *> *getScanfArgs(CodeGenerator &Context,vector<ExpNode*>args){
+    vector<llvm::Value *> *scanf_args = new vector<llvm::Value *>;
+    for(auto it: args){
+        llvm::Value* tmp = it->genCode(Context);
+        scanf_args->push_back(tmp);
+    }
+    return scanf_args;
+}
+vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args){
+    vector<llvm::Value *> *gets_args = new vector<llvm::Value *>;
+    for(auto it: args){
+        llvm::Value* tmp = it->genCode(emitContext);
+        gets_args->push_back(tmp);
+    }
+    return gets_args;
+}
+llvm:: Value* emitPrintf(CodeGenerator &Context,vector<ExpNode*> args){
+    vector<llvm::Value *> *printf_args = getPrintfArgs(Context, args);    
+    return Builder.CreateCall(Context.printf, *printf_args, "printf");
+}
+
+llvm:: Value* emitScanf(CodeGenerator &emitContext,vector<ExpNode*> args){
+    vector<llvm::Value *> *scanf_args = getScanfArgs(emitContext, args);    
+    return Builder.CreateCall(emitContext.scanf, *scanf_args, "scanf");
+}
+llvm:: Value* emitGets(CodeGenerator &emitContext,vector<ExpNode*> args){   
+    vector<llvm::Value *> *gets_args = getGetsArgs(emitContext, args);    
+    return Builder.CreateCall(emitContext.gets, *gets_args, "gets");
+}
 
 llvm::Type* getLLvmType(string type){ //通过type，返回对应的LLVM的Type
     if(type == "int"){return llvm::Type::getInt32Ty(globalContext);}
@@ -30,10 +76,6 @@ llvm::Type* getArrayLLvmType(string type,int size){ //对于数组形式，返�
     }
     else{return nullptr;}
 }
-llvm::Value* typeCast(llvm::Value* src, llvm::Type* dst) {
-    llvm::Instruction::CastOps op = getCastInst(src->getType(), dst);
-    return Builder.CreateCast(op, src, dst, "tmptypecast");
-}
 llvm::Instruction::CastOps getCastInst(llvm::Type* src, llvm::Type* dst) {
     if (src == llvm::Type::getFloatTy(globalContext) && dst == llvm::Type::getInt32Ty(globalContext)) { //llvm下float到int
         return llvm::Instruction::FPToSI;  
@@ -54,6 +96,11 @@ llvm::Instruction::CastOps getCastInst(llvm::Type* src, llvm::Type* dst) {
         throw logic_error("[ERROR] Wrong typecast");
     }
 }
+llvm::Value* typeCast(llvm::Value* src, llvm::Type* dst) {
+    llvm::Instruction::CastOps op = getCastInst(src->getType(), dst);
+    return Builder.CreateCast(op, src, dst, "tmptypecast");
+}
+
 llvm::Value *IdentifierNode::genCode(CodeGenerator & gen){
     cout << "IdentifierNode : " << *name << endl;
 
@@ -208,11 +255,11 @@ llvm::Value *ArrayAssNode::genCode(CodeGenerator & gen){
 
 llvm::Value *FunCallNode::genCode(CodeGenerator & gen){
     if(identifier->getname() == "printf"){ //若调用 printf 函数
-        return gen.emitPrintf(gen, args);
+        return emitPrintf(gen, args);
     } else if(identifier->getname() == "scanf"){ //若调用 scanf 函数
-        return gen.emitScanf(gen, args);
+        return emitScanf(gen, args);
     } else if(identifier->getname() == "gets") { // 若调用 gets 函数
-        return gen.emitGets(gen, args);
+        return emitGets(gen, args);
     }
 
     // 在module中查找以identifier命名的函数

@@ -9,7 +9,7 @@ find_package(LLVM REQUIRED CONFIG)
 
 include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
-add_executable(Compiler ./src/CodeGenerator.cpp ./src/CodeGenerator.h ./src/AST.cpp ./src/AST.h ./src/main.cpp ./src/lab3_yacc.cpp ./src/lab3_yacc.hpp ./src/lex.yy.cc)
+add_executable(Compiler ./src/CodeGenerator.cpp ./src/CodeGenerator.hpp ./src/AST.cpp ./src/AST.h ./src/main.cpp ./src/lab_yacc.cpp ./src/lab_yacc.hpp ./src/lex.yy.cc)
 set(LLVM_LINK_COMPONENTS
     Core
     ExecutionEngine

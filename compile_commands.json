@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/cxc/project",
+  "command": "/usr/bin/c++  -I/usr/lib/llvm-14/include   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++14 -o CMakeFiles/Compiler.dir/src/CodeGenerator.cpp.o -c /home/cxc/project/src/CodeGenerator.cpp",
+  "file": "/home/cxc/project/src/CodeGenerator.cpp"
+},
+{
+  "directory": "/home/cxc/project",
+  "command": "/usr/bin/c++  -I/usr/lib/llvm-14/include   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++14 -o CMakeFiles/Compiler.dir/src/AST.cpp.o -c /home/cxc/project/src/AST.cpp",
+  "file": "/home/cxc/project/src/AST.cpp"
+},
+{
+  "directory": "/home/cxc/project",
+  "command": "/usr/bin/c++  -I/usr/lib/llvm-14/include   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++14 -o CMakeFiles/Compiler.dir/src/main.cpp.o -c /home/cxc/project/src/main.cpp",
+  "file": "/home/cxc/project/src/main.cpp"
+},
+{
+  "directory": "/home/cxc/project",
+  "command": "/usr/bin/c++  -I/usr/lib/llvm-14/include   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++14 -o CMakeFiles/Compiler.dir/src/lab_yacc.cpp.o -c /home/cxc/project/src/lab_yacc.cpp",
+  "file": "/home/cxc/project/src/lab_yacc.cpp"
+},
+{
+  "directory": "/home/cxc/project",
+  "command": "/usr/bin/c++  -I/usr/lib/llvm-14/include   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -std=gnu++14 -o CMakeFiles/Compiler.dir/src/lex.yy.cc.o -c /home/cxc/project/src/lex.yy.cc",
+  "file": "/home/cxc/project/src/lex.yy.cc"
+}
+]

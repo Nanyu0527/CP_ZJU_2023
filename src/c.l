@@ -5,6 +5,7 @@
 #include"AST.h"
 #include"lab_yacc.hpp"
 char SecondChar(char ch);
+
 %}
 
 %%

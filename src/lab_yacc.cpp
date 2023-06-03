@@ -1703,13 +1703,13 @@ yyreturnlab:
 
 #line 133 "c.y"
 
-void yyerror(char *str){
-    fprintf(stderr,"error:%s\n",str);
-}    
+// void yyerror(char *str){
+//     fprintf(stderr,"error:%s\n",str);
+// }    
 
-int yywrap(){
-    return 1;
-}
-int main(){
-    yyparse();
-}
+// int yywrap(){
+//     return 1;
+// }
+// int main(){
+//     yyparse();
+// }
