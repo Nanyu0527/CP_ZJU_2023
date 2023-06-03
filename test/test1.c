@@ -1,5 +1,3 @@
-#include<stdio.h>
-//quicksort
 void quicksort(int T[10000], int L, int R) {
     int i = L;
     int j = R;    

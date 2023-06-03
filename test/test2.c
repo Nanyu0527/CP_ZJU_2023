@@ -1,4 +1,3 @@
-#include<stdio.h>
 int A[625],B[625],C[625];
 int main(){ 
     int MA,NA,MB,NB,i=0,j=0,k=0;

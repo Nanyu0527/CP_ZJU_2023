@@ -174,11 +174,11 @@ public:
 class BlockNode : public ExpNode{
 public:
     BlockNode(){}
-    BlockNode(vector<StmNode*> _stmlist):stmlist(_stmlist){}
+    BlockNode(vector<StmNode*> _stmlist):stmList(_stmlist){}
     
      llvm::Value *genCode(CodeGenerator & gen);
 
-    vector<StmNode*> stmlist;
+    vector<StmNode*> stmList;
 };
 
 class ExpStmNode : public StmNode{

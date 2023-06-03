@@ -554,12 +554,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    62,    62,    65,    66,    69,    70,    71,    72,    73,
-      74,    75,    76,    77,    80,    81,    84,    85,    86,    89,
-      92,    93,    94,    97,   100,   101,   102,   103,   106,   107,
-     108,   111,   112,   113,   114,   115,   116,   117,   118,   119,
-     120,   121,   122,   123,   124,   125,   126,   127,   128,   129,
-     130,   131
+       0,    61,    61,    64,    65,    68,    69,    70,    71,    72,
+      73,    74,    75,    76,    79,    80,    83,    84,    85,    88,
+      91,    92,    93,    96,    99,   100,   101,   102,   105,   106,
+     107,   110,   111,   112,   113,   114,   115,   116,   117,   118,
+     119,   120,   121,   122,   123,   124,   125,   126,   127,   128,
+     129,   130
 };
 #endif
 
@@ -1226,283 +1226,283 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: stmlist  */
-#line 62 "c.y"
+#line 61 "c.y"
        { root = (yyvsp[0].block);}
 #line 1232 "lab_yacc.cpp"
     break;
 
   case 3: /* stmlist: stm  */
-#line 65 "c.y"
-   { (yyval.block) = new BlockNode();(yyval.block)->stmlist.push_back((yyvsp[0].stm));}
+#line 64 "c.y"
+   { (yyval.block) = new BlockNode();(yyval.block)->stmList.push_back((yyvsp[0].stm));}
 #line 1238 "lab_yacc.cpp"
     break;
 
   case 4: /* stmlist: stmlist stm  */
-#line 66 "c.y"
-            {(yyval.block)->stmlist.push_back((yyvsp[0].stm));}
+#line 65 "c.y"
+            {(yyval.block)->stmList.push_back((yyvsp[0].stm));}
 #line 1244 "lab_yacc.cpp"
     break;
 
   case 7: /* stm: exp SEMICOLON  */
-#line 71 "c.y"
+#line 70 "c.y"
               {(yyval.stm) = new ExpStmNode((yyvsp[-1].exp));}
 #line 1250 "lab_yacc.cpp"
     break;
 
   case 8: /* stm: RETURN SEMICOLON  */
-#line 72 "c.y"
+#line 71 "c.y"
                  {(yyval.stm) = new ReturnNullStmNode();}
 #line 1256 "lab_yacc.cpp"
     break;
 
   case 9: /* stm: RETURN exp SEMICOLON  */
-#line 73 "c.y"
+#line 72 "c.y"
                      {(yyval.stm) = new ReturnStmNode((yyvsp[-1].exp));}
 #line 1262 "lab_yacc.cpp"
     break;
 
   case 10: /* stm: BREAK SEMICOLON  */
-#line 74 "c.y"
+#line 73 "c.y"
                 {(yyval.stm) = new BreakStmNode();}
 #line 1268 "lab_yacc.cpp"
     break;
 
   case 11: /* stm: IF LPARENT exp RPARENT block  */
-#line 75 "c.y"
+#line 74 "c.y"
                              {(yyval.stm) = new IfStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
 #line 1274 "lab_yacc.cpp"
     break;
 
   case 12: /* stm: IF LPARENT exp RPARENT block ELSE block  */
-#line 76 "c.y"
+#line 75 "c.y"
                                         {(yyval.stm) = new IfElseStmNode((yyvsp[-4].exp),(yyvsp[-2].block),(yyvsp[0].block));}
 #line 1280 "lab_yacc.cpp"
     break;
 
   case 13: /* stm: WHILE LPARENT exp RPARENT block  */
-#line 77 "c.y"
+#line 76 "c.y"
                                 {(yyval.stm) = new WhileStmNode((yyvsp[-2].exp),(yyvsp[0].block));}
 #line 1286 "lab_yacc.cpp"
     break;
 
   case 14: /* block: LBRACE stmlist RBRACE  */
-#line 80 "c.y"
+#line 79 "c.y"
                       { (yyval.block) = (yyvsp[-1].block);}
 #line 1292 "lab_yacc.cpp"
     break;
 
   case 15: /* block: LBRACE RBRACE  */
-#line 81 "c.y"
+#line 80 "c.y"
                { (yyval.block) = new BlockNode(); }
 #line 1298 "lab_yacc.cpp"
     break;
 
   case 16: /* var_decl: identifier identifier  */
-#line 84 "c.y"
+#line 83 "c.y"
                      {(yyval.stm) = new VarDecNode((yyvsp[-1].identifier),(yyvsp[0].identifier));}
 #line 1304 "lab_yacc.cpp"
     break;
 
   case 17: /* var_decl: identifier identifier ASSIGN exp  */
-#line 85 "c.y"
+#line 84 "c.y"
                                  {(yyval.stm) = new VarDecNode{(yyvsp[-3].identifier),(yyvsp[-2].identifier),(yyvsp[0].exp)}; }
 #line 1310 "lab_yacc.cpp"
     break;
 
   case 18: /* var_decl: identifier identifier LBRACKET INTEGER RBRACKET  */
-#line 86 "c.y"
+#line 85 "c.y"
                                                  {(yyval.stm) =new VarDecNode{(yyvsp[-4].identifier),(yyvsp[-3].identifier),(yyvsp[-1].iVal)};}
 #line 1316 "lab_yacc.cpp"
     break;
 
   case 19: /* func_decl: identifier identifier LPARENT func_decl_args RPARENT block  */
-#line 89 "c.y"
+#line 88 "c.y"
                                                            {(yyval.stm) = new FunDecNode(&*(yyvsp[-5].identifier), &*(yyvsp[-4].identifier), *(yyvsp[-2].vardeclist), &*(yyvsp[0].block));}
 #line 1322 "lab_yacc.cpp"
     break;
 
   case 20: /* func_decl_args: %empty  */
-#line 92 "c.y"
+#line 91 "c.y"
 { (yyval.vardeclist) = new std::vector<VarDecNode*>();}
 #line 1328 "lab_yacc.cpp"
     break;
 
   case 21: /* func_decl_args: var_decl  */
-#line 93 "c.y"
+#line 92 "c.y"
          {(yyval.vardeclist) = new std::vector<VarDecNode*>();(yyval.vardeclist)->push_back((yyvsp[0].vardec));}
 #line 1334 "lab_yacc.cpp"
     break;
 
   case 22: /* func_decl_args: func_decl_args COMMA var_decl  */
-#line 94 "c.y"
+#line 93 "c.y"
                                {(yyvsp[-2].vardeclist)->push_back((yyvsp[0].vardec));}
 #line 1340 "lab_yacc.cpp"
     break;
 
   case 23: /* identifier: IDENTIFER  */
-#line 97 "c.y"
+#line 96 "c.y"
          {(yyval.identifier) = new IdentifierNode((yyvsp[0].sVal));}
 #line 1346 "lab_yacc.cpp"
     break;
 
   case 24: /* const_value: INTEGER  */
-#line 100 "c.y"
+#line 99 "c.y"
        {(yyval.exp) = new IntNode((yyvsp[0].iVal));}
 #line 1352 "lab_yacc.cpp"
     break;
 
   case 25: /* const_value: CHAR  */
-#line 101 "c.y"
+#line 100 "c.y"
       {(yyval.exp) = new CharNode(*(yyvsp[0].sVal));}
 #line 1358 "lab_yacc.cpp"
     break;
 
   case 26: /* const_value: STRING  */
-#line 102 "c.y"
+#line 101 "c.y"
         {(yyval.exp) = new StringNode(*(yyvsp[0].sVal));}
 #line 1364 "lab_yacc.cpp"
     break;
 
   case 27: /* const_value: REAL  */
-#line 103 "c.y"
+#line 102 "c.y"
       {(yyval.exp) = new DoubleNode((yyvsp[0].dVal));}
 #line 1370 "lab_yacc.cpp"
     break;
 
   case 28: /* call_args: %empty  */
-#line 106 "c.y"
+#line 105 "c.y"
 {(yyval.explist) = new std::vector<ExpNode*>();}
 #line 1376 "lab_yacc.cpp"
     break;
 
   case 29: /* call_args: exp  */
-#line 107 "c.y"
+#line 106 "c.y"
     {(yyval.explist) = new std::vector<ExpNode*>();(yyval.explist)->push_back((yyvsp[0].exp));}
 #line 1382 "lab_yacc.cpp"
     break;
 
   case 30: /* call_args: call_args COMMA exp  */
-#line 108 "c.y"
+#line 107 "c.y"
                      {(yyvsp[-2].explist)->push_back((yyvsp[0].exp));}
 #line 1388 "lab_yacc.cpp"
     break;
 
   case 31: /* exp: identifier ASSIGN exp  */
-#line 111 "c.y"
+#line 110 "c.y"
                      {(yyval.exp) = new AssignNode((yyvsp[-2].identifier), (yyvsp[0].exp));}
 #line 1394 "lab_yacc.cpp"
     break;
 
   case 32: /* exp: identifier LPARENT call_args RPARENT  */
-#line 112 "c.y"
+#line 111 "c.y"
                                       {(yyval.exp) = new FunCallNode((yyvsp[-3].identifier), *(yyvsp[-1].explist));}
 #line 1400 "lab_yacc.cpp"
     break;
 
   case 33: /* exp: identifier  */
-#line 113 "c.y"
+#line 112 "c.y"
             {(yyval.identifier) = (yyvsp[0].identifier);}
 #line 1406 "lab_yacc.cpp"
     break;
 
   case 34: /* exp: BITAND identifier  */
-#line 114 "c.y"
+#line 113 "c.y"
                    {(yyval.exp) = new getAddrNode((yyvsp[0].identifier));}
 #line 1412 "lab_yacc.cpp"
     break;
 
   case 35: /* exp: BITAND identifier LBRACKET exp RBRACKET  */
-#line 115 "c.y"
+#line 114 "c.y"
                                          {(yyval.exp) = new getArrayAddrNode((yyvsp[-3].identifier), (yyvsp[-1].exp));}
 #line 1418 "lab_yacc.cpp"
     break;
 
   case 36: /* exp: exp MUL exp  */
-#line 116 "c.y"
+#line 115 "c.y"
              {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1424 "lab_yacc.cpp"
     break;
 
   case 37: /* exp: exp DIV exp  */
-#line 117 "c.y"
+#line 116 "c.y"
              {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1430 "lab_yacc.cpp"
     break;
 
   case 38: /* exp: exp PLUS exp  */
-#line 118 "c.y"
+#line 117 "c.y"
               {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1436 "lab_yacc.cpp"
     break;
 
   case 39: /* exp: exp MINUS exp  */
-#line 119 "c.y"
+#line 118 "c.y"
                {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1442 "lab_yacc.cpp"
     break;
 
   case 40: /* exp: exp AND exp  */
-#line 120 "c.y"
+#line 119 "c.y"
              {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1448 "lab_yacc.cpp"
     break;
 
   case 41: /* exp: exp OR exp  */
-#line 121 "c.y"
+#line 120 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1454 "lab_yacc.cpp"
     break;
 
   case 42: /* exp: exp LT exp  */
-#line 122 "c.y"
+#line 121 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token),(yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1460 "lab_yacc.cpp"
     break;
 
   case 43: /* exp: exp GT exp  */
-#line 123 "c.y"
+#line 122 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1466 "lab_yacc.cpp"
     break;
 
   case 44: /* exp: exp EQ exp  */
-#line 124 "c.y"
+#line 123 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1472 "lab_yacc.cpp"
     break;
 
   case 45: /* exp: exp NE exp  */
-#line 125 "c.y"
+#line 124 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp),(yyvsp[0].exp));}
 #line 1478 "lab_yacc.cpp"
     break;
 
   case 46: /* exp: exp LE exp  */
-#line 126 "c.y"
+#line 125 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1484 "lab_yacc.cpp"
     break;
 
   case 47: /* exp: exp GE exp  */
-#line 127 "c.y"
+#line 126 "c.y"
             {(yyval.exp) = new BinOpNode((yyvsp[-1].token), (yyvsp[-2].exp), (yyvsp[0].exp));}
 #line 1490 "lab_yacc.cpp"
     break;
 
   case 48: /* exp: LPARENT exp RPARENT  */
-#line 128 "c.y"
+#line 127 "c.y"
                      {(yyval.exp) = (yyvsp[-1].exp);}
 #line 1496 "lab_yacc.cpp"
     break;
 
   case 49: /* exp: identifier LBRACKET exp RBRACKET  */
-#line 129 "c.y"
+#line 128 "c.y"
                                   { (yyval.exp) = new ArrayEleNode((yyvsp[-3].identifier), (yyvsp[-1].exp));}
 #line 1502 "lab_yacc.cpp"
     break;
 
   case 50: /* exp: identifier LBRACKET exp RBRACKET ASSIGN exp  */
-#line 130 "c.y"
+#line 129 "c.y"
                                              { (yyval.exp) = new ArrayAssNode((yyvsp[-5].identifier), (yyvsp[-3].exp), (yyvsp[0].exp));}
 #line 1508 "lab_yacc.cpp"
     break;
@@ -1701,7 +1701,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 133 "c.y"
+#line 132 "c.y"
 
 // void yyerror(char *str){
 //     fprintf(stderr,"error:%s\n",str);

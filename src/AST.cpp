@@ -388,7 +388,7 @@ llvm::Value *AssignNode::genCode(CodeGenerator & gen){
 
 llvm::Value *BlockNode::genCode(CodeGenerator & gen){
     llvm::Value* tmp = NULL;
-    for(auto i : stmlist){
+    for(auto i : stmList){
         cout << "Generating code for " << typeid(*i).name() << endl;
         tmp = (*i).genCode(gen);
         // 若当前语句为 reutrn , 则后面的语句需要截断

@@ -1,3 +1,7 @@
+letter          [A-Za-z_]
+digit           [0-9]
+letter_digit    [A-Za-z_0-9] 
+line            \n
 %{
 #include<stdio.h>
 #include<string>

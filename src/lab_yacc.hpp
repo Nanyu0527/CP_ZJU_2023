@@ -115,11 +115,10 @@ union YYSTYPE
     StmNode *stm;
     int token;
 	VarDecNode *vardec;
-	vector<StmNode*> *stmlist;
     vector<ExpNode*> *explist;
     vector<VarDecNode*> *vardeclist;
 
-#line 123 "lab_yacc.hpp"
+#line 122 "lab_yacc.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -24,7 +24,6 @@
     StmNode *stm;
     int token;
 	VarDecNode *vardec;
-	vector<StmNode*> *stmlist;
     vector<ExpNode*> *explist;
     vector<VarDecNode*> *vardeclist;
 }
@@ -62,8 +61,8 @@ program:
 stmlist{ root = $1;}
 ;
 stmlist:
-stm{ $$ = new BlockNode();$$->stmlist.push_back($<stm>1);}
-|stmlist stm{$$->stmlist.push_back($<stm>2);}
+stm{ $$ = new BlockNode();$$->stmList.push_back($<stm>1);}
+|stmlist stm{$$->stmList.push_back($<stm>2);}
 ;
 stm:
 var_decl SEMICOLON

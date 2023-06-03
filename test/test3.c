@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 char course_info[1000000];
 char pre_course[1000000];
 int pass_course[11100];

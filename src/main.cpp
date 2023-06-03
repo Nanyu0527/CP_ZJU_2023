@@ -13,7 +13,7 @@ int main(){
     freopen(inputfile_name.c_str(), "r", stdin);
     yyparse();
     CodeGenerator* generator = new CodeGenerator();
-
+    
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmParser();
     llvm::InitializeNativeTargetAsmPrinter();
