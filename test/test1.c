@@ -29,11 +29,12 @@ void quicksort(int T[10000], int L, int R) {
 }
 int main(){
     int N;
-    // scanf("%d",&N);
+    printf("haha");
+    scanf("%d",&N);
     int index = 0;
     int ARRAY[10000];
     while(index < N){
-        // scanf("%d",&ARRAY[index]);
+        scanf("%d",&ARRAY[index]);
         index = index + 1;
     }
     int L = 0;
@@ -41,7 +42,7 @@ int main(){
     quicksort(ARRAY,L,R);
     index = 0;
     while(index < N){
-        // printf("%d\n",ARRAY[index]);
+        printf("%d\n",ARRAY[index]);
         index = index + 1;
     }    
 }   
