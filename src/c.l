@@ -56,35 +56,25 @@ char SecondChar(char ch);
 						
 [\t\v\r\n\f\a\b]			{;}
 
-[0-9]+\.[0-9]+				{ 
+{digit}+\.{digit}+				{ 
 								double dtmp;
 								sscanf(yytext, "%lf", &dtmp);
 								yylval.dVal = dtmp;
 								return REAL; 
 							}
-[0-9]+						{
+{digit}+						{
 								int itmp;
 								sscanf(yytext, "%d", &itmp);
 								yylval.iVal = itmp; 
 								return INTEGER; 
 							}
-\'.\'         				{ 	char str[] = "a";
-								char cVal = SecondChar(yytext[1]);
-								str[0] = cVal;
-								yylval.sVal = new std::string(str,1);
-								return STRING;
-							}
-\'\\.\'   					{	char str[] = "a";
-								char cVal = SecondChar(yytext[2]);
-								str[0] = cVal;
-								yylval.sVal = new std::string(str,1);
-								return STRING;
-							}					
+\'.\'|\'\\.\'         		{	yylval.sVal = new std::string(yytext, yyleng);
+								return CHAR;	}			
 \"(\\.|[^"\\])*\"      		{	
 								yylval.sVal = new std::string(yytext, yyleng);
 								return STRING;
 							}
-[a-zA-Z_]([a-zA-Z_0-9])*	{
+{letter}{letter_digit}*	{
 								yylval.sVal = new std::string(yytext, yyleng);
 								return IDENTIFER;
 							}								

@@ -81,7 +81,7 @@ LBRACE stmlist RBRACE { $$ = $2;}
 ;
 var_decl:
 identifier identifier{$$ = new VarDecNode($1,$2);}
-|identifier identifier ASSIGN exp{$$ = new VarDecNode{$1,$2,$4}; }//?
+|identifier identifier ASSIGN exp{$$ = new VarDecNode{$1,$2,$4}; }
 |identifier identifier LBRACKET INTEGER RBRACKET {$$ =new VarDecNode{$1,$2,$4};}
 ;
 func_decl:

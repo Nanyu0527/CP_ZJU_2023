@@ -2,6 +2,7 @@
 int main(){
     int a=1;
     a=1;
-    printf("a = 1\n");
+    string s = "haha";
+    // char s = 'h';
     return 0;
 }

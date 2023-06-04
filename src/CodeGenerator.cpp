@@ -63,47 +63,6 @@ llvm::Function* CodeGenerator::getGets(){
     gets_func->setCallingConv(llvm::CallingConv::C);
     return gets_func;
 }
-// vector<llvm::Value *> *getPrintfArgs(CodeGenerator &Context,vector<ExpNode*>args){
-//     vector<llvm::Value *> *printf_args = new vector<llvm::Value *>;
-//     for(auto it: args){
-//         llvm::Value* tmp = it->genCode(Context);
-//         if (tmp->getType() == llvm::Type::getFloatTy(globalContext))
-//             tmp = Builder.CreateFPExt(tmp, llvm::Type::getDoubleTy(globalContext), "tmpdouble");
-//         printf_args->push_back(tmp);
-//     }
-//     return printf_args;
-// }
-
-// vector<llvm::Value *> *getScanfArgs(CodeGenerator &Context,vector<ExpNode*>args){
-//     vector<llvm::Value *> *scanf_args = new vector<llvm::Value *>;
-//     for(auto it: args){
-//         llvm::Value* tmp = it->genCode(Context);
-//         scanf_args->push_back(tmp);
-//     }
-//     return scanf_args;
-// }
-// vector<llvm::Value *> *getGetsArgs(CodeGenerator &emitContext,vector<ExpNode*>args){
-//     vector<llvm::Value *> *gets_args = new vector<llvm::Value *>;
-//     for(auto it: args){
-//         llvm::Value* tmp = it->genCode(emitContext);
-//         gets_args->push_back(tmp);
-//     }
-//     return gets_args;
-// }
-// llvm:: Value* CodeGenerator::emitPrintf(CodeGenerator &Context,vector<ExpNode*> args){
-//     vector<llvm::Value *> *printf_args = getPrintfArgs(Context, args);    
-//     return Builder.CreateCall(Context.printf, *printf_args, "printf");
-// }
-
-// llvm:: Value* CodeGenerator::emitScanf(CodeGenerator &emitContext,vector<ExpNode*> args){
-//     vector<llvm::Value *> *scanf_args = getScanfArgs(emitContext, args);    
-//     return Builder.CreateCall(emitContext.scanf, *scanf_args, "scanf");
-// }
-// llvm:: Value* CodeGenerator::emitGets(CodeGenerator &emitContext,vector<ExpNode*> args){
-//     //vector<llvm::Value *> *scanf_args = getScanfArgsAddr(emitContext, args);    
-//     vector<llvm::Value *> *gets_args = getGetsArgs(emitContext, args);    
-//     return Builder.CreateCall(emitContext.gets, *gets_args, "gets");
-// }
 void CodeGenerator::Run(BlockNode* Root){
     Root->genCode(*this);
     llvm::verifyModule(*this->myModule, &llvm::outs());

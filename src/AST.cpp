@@ -137,17 +137,17 @@ llvm::Value *StringNode::genCode(CodeGenerator &gen) {
     string str = value.substr(1, value.length() - 2);
     string after = string(1, '\n');
     int pos = str.find("\\n");
+    cout<<"haha"<<endl;
     while(pos != string::npos) {
         str = str.replace(pos, 2, after);
         pos = str.find("\\n");
     }
     llvm::Constant *strConst = llvm::ConstantDataArray::getString(globalContext, str);
     llvm::Value *globalVar = new llvm::GlobalVariable(*gen.myModule, strConst->getType(), true, llvm::GlobalValue::PrivateLinkage, strConst, "_Const_String_");
-
-    llvm::Value *zeroIndex = llvm::ConstantInt::get(llvm::Type::getInt32Ty(globalContext), 0);
-    llvm::Value *indices[] = { zeroIndex, zeroIndex };
-
-    llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, indices, "tmpstring");
+    vector<llvm::Value*> indexList;
+    indexList.push_back(Builder.getInt32(0));
+    indexList.push_back(Builder.getInt32(0));
+    llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, llvm::ArrayRef<llvm::Value*>(indexList), "tmpstring");
     return varPtr;
 }
 llvm::Value *CharNode::genCode(CodeGenerator & gen){
