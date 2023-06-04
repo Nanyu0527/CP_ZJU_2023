@@ -15,7 +15,7 @@
 %union {
 	int iVal;
     std::string *sVal;
-    double dVal;
+    float dVal;
     char cVal;
 	Node *node;
 	IdentifierNode *identifier;
@@ -99,7 +99,7 @@ const_value:
 INTEGER{$$ = new IntNode($1);}
 |CHAR {$$ = new CharNode(*$1);}
 |STRING {$$ = new StringNode(*$1);}
-|REAL {$$ = new DoubleNode($1);}
+|REAL {$$ = new FloatNode($1);}
 ;
 call_args:
 {$$ = new std::vector<ExpNode*>();}

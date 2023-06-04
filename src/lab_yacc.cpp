@@ -1365,7 +1365,7 @@ yyreduce:
 
   case 27: /* const_value: REAL  */
 #line 102 "c.y"
-      {(yyval.exp) = new DoubleNode((yyvsp[0].dVal));}
+      {(yyval.exp) = new FloatNode((yyvsp[0].dVal));}
 #line 1370 "lab_yacc.cpp"
     break;
 

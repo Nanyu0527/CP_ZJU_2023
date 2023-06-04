@@ -14,7 +14,7 @@ enum C_TYPE
 {
     C_INTEGER,
     // C_FLOAT,
-    C_DOUBLE,
+    C_Float,
     C_CHAR
     // C_BOOLEAN
 };
@@ -38,7 +38,6 @@ public:
     struct Value
     {
         int i;
-        double d;
         float f;
         string c;
     };
@@ -82,18 +81,16 @@ public:
     string value;
 };
 
-class DoubleNode : public Const{
+class FloatNode : public Const{
 public:
-    DoubleNode(double value) : value(value){}
-     C_TYPE getType(){ return C_DOUBLE;}
-     Const::Value getValue(){
-        Const::Value v;
-        v.d = value;
-        return v; 
+    FloatNode(float value) : value(value){}
+     C_TYPE getType(){ return C_Float;}
+     float getValue(){
+        return value;
     }
     
-     llvm::Value *genCode(CodeGenerator & gen);
-    double value;
+    llvm::Value *genCode(CodeGenerator & gen);
+    float value;
 };
 
 class StringNode : public ExpNode{

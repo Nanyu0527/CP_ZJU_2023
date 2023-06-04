@@ -29,7 +29,6 @@ void quicksort(int T[10000], int L, int R) {
 }
 int main(){
     int N;
-    printf("haha");
     scanf("%d",&N);
     int index = 0;
     int ARRAY[10000];

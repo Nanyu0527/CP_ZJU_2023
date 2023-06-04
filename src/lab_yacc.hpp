@@ -106,7 +106,7 @@ union YYSTYPE
 
 	int iVal;
     std::string *sVal;
-    double dVal;
+    float dVal;
     char cVal;
 	Node *node;
 	IdentifierNode *identifier;

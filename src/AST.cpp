@@ -11,7 +11,7 @@ vector<llvm::Value *> *getPrintfArgs(CodeGenerator &emitContext,vector<ExpNode*>
     for(auto it: args){
         llvm::Value* tmp = it->genCode(emitContext);
         if (tmp->getType() == llvm::Type::getFloatTy(globalContext))
-            tmp = Builder.CreateFPExt(tmp, llvm::Type::getDoubleTy(globalContext), "tmpdouble");
+            tmp = Builder.CreateFPExt(tmp, llvm::Type::getFloatTy(globalContext), "tmpdouble");
         printf_args->push_back(tmp);
     }
     return printf_args;
@@ -134,21 +134,24 @@ llvm::Value *IntNode::genCode(CodeGenerator & gen){
 }
 
 llvm::Value *StringNode::genCode(CodeGenerator &gen) {
-    string str = value.substr(1, value.length() - 2);
-    string after = string(1, '\n');
-    int pos = str.find("\\n");
-    cout<<"haha"<<endl;
-    while(pos != string::npos) {
-        str = str.replace(pos, 2, after);
-        pos = str.find("\\n");
-    }
-    llvm::Constant *strConst = llvm::ConstantDataArray::getString(globalContext, str);
-    llvm::Value *globalVar = new llvm::GlobalVariable(*gen.myModule, strConst->getType(), true, llvm::GlobalValue::PrivateLinkage, strConst, "_Const_String_");
-    vector<llvm::Value*> indexList;
-    indexList.push_back(Builder.getInt32(0));
-    indexList.push_back(Builder.getInt32(0));
-    llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, llvm::ArrayRef<llvm::Value*>(indexList), "tmpstring");
-    return varPtr;
+    // string str = value.substr(1, value.length() - 2);
+    // string after = string(1, '\n');
+    // int pos = str.find("\\n");
+    // cout<<"haha"<<endl;
+    // while(pos != string::npos) {
+    //     str = str.replace(pos, 2, after);
+    //     pos = str.find("\\n");
+    // }
+    // llvm::Constant *strConst = llvm::ConstantDataArray::getString(globalContext, str);
+    // llvm::Value *globalVar = new llvm::GlobalVariable(*gen.myModule, strConst->getType(), true, llvm::GlobalValue::PrivateLinkage, strConst, "_Const_String_");
+    // vector<llvm::Value*> indexList;
+    // indexList.push_back(Builder.getInt32(0));
+    // indexList.push_back(Builder.getInt32(0));
+    // cout<<"biubiu"<<endl;
+    // llvm::Value *varPtr = Builder.CreateInBoundsGEP(globalVar->getType(), globalVar, llvm::ArrayRef<llvm::Value*>(indexList), "tmpstring");
+    // cout<<"lala"<<endl;
+    // return varPtr;
+    return Builder.CreateGlobalStringPtr(this->value.c_str());
 }
 llvm::Value *CharNode::genCode(CodeGenerator & gen){
     cout << "CharNode : " << value <<endl;
@@ -182,7 +185,8 @@ llvm::Value *CharNode::genCode(CodeGenerator & gen){
     return nullptr;
 }
 
-llvm::Value* DoubleNode::genCode(CodeGenerator &CodeGenContext) {
+llvm::Value* FloatNode::genCode(CodeGenerator &CodeGenContext) {
+    cout<<"a"<<endl;
     return llvm::ConstantFP::get(globalContext, llvm::APFloat(value));
 }
 
@@ -236,12 +240,23 @@ llvm::Value *ArrayAssNode::genCode(CodeGenerator & gen){
     }
     // 如果是一个数组 
     else {
+        cout<<22222<<endl;
         indexList.push_back(Builder.getInt32(0));
         indexList.push_back(indexValue);    
     }
-    llvm::Value* left =  Builder.CreateInBoundsGEP(arrayValue->getType(),arrayValue, llvm::ArrayRef<llvm::Value*>(indexList), "tmpvar");
     llvm::Value *right = rhs->genCode(gen);
-
+    llvm::LLVMContext llvmContext;
+    llvm::Type* intType = llvm::Type::getInt32Ty(llvmContext);
+    cout<<intType<<endl;
+    cout<<right->getType()<<endl;
+    llvm::Type* sType = llvm::Type::getInt32Ty(llvmContext);
+    cout<<sType<<endl;
+    cout<<33333<<endl;
+    cout<<arrayValue->getType()<<endl;
+    llvm::Value* left =  Builder.CreateInBoundsGEP(arrayValue->getType(),arrayValue, llvm::ArrayRef<llvm::Value*>(indexList), "tmpvar");
+    cout<<44444<<endl;
+    
+    
     llvm::outs()<<*(left->getType()->getPointerElementType());
 
     if (right->getType() != left->getType()->getPointerElementType())
@@ -374,11 +389,13 @@ llvm::Value *AssignNode::genCode(CodeGenerator & gen){
 
     llvm::Value* right = rhs->genCode(gen);
     // 定位 block
+    cout<<"00"<<endl;
+    cout<<right->getType()<<endl;
+    cout<<"00"<<endl;
     auto CurrentBlock = Builder.GetInsertBlock();
     
     if (right->getType() != result->getType()->getPointerElementType())
         right = typeCast(right, result->getType()->getPointerElementType());
-
     return new llvm::StoreInst(right, result, false, CurrentBlock);
 }
 

@@ -1,19 +1,23 @@
-; ModuleID = 'main'
-source_filename = "main"
+Generating code for 10FunDecNode
+Generating code for 10VarDecNode
+Generating code for 10ExpStmNode
+Generating code for P7ExpNode
+AssignmentNode,lhs: a
+a
+00
+0x55d5f8d09770
+00
+00
+Generating code for 10VarDecNode
+Generating code for 10ExpStmNode
+Generating code for P7ExpNode
+assign for arrayElementNode:ARRAY[]
+IntNode : 0
 
-declare i32 @printf(i8*, ...)
-
-declare i32 @scanf(...)
-
-declare i32 @gets(...)
-
-define i32 @main() {
-entry:
-  %0 = alloca i32, align 4
-  %c = alloca i8, align 1
-  store i8 115, i8* %c, align 1
-
-return:                                           ; No predecessors!
-  %1 = load i32, i32* %0, align 4
-  ret i32 %1
-}
+22222
+IntNode : 1
+0x55d5f8d350a0
+0x55d5f8d09890
+0x55d5f8d350a0
+33333
+0x55d5f8d2bb30
